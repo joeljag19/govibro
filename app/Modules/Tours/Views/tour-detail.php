@@ -14,7 +14,7 @@
 
 <?= $this->section('content') ?>
 <!-- Breadcrumb -->
-<div class="breadcrumb-bar breadcrumb-bg-02 text-center">
+<!-- <div class="breadcrumb-bar breadcrumb-bg-0 text-center">
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-12">
@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- /Breadcrumb -->
 
 <div class="content">
@@ -110,7 +110,9 @@ $all_images = array_merge($all_images, $gallery);
                 <div class="bg-light-200 card-bg-light mb-4 p-4 rounded">
                     <h5 class="fs-18 mb-3">Descripción</h5>
                     <div class="mb-2">
-                        <?= nl2br(esc($tour['content'])) ?>
+                        <!-- <?= nl2br(esc($tour['content'])) ?> -->
+                        <?= $tour['content'] ?>
+
                     </div>
                 </div>
                 <!-- /Description -->

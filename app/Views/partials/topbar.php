@@ -1,12 +1,11 @@
 <?php
-$link = $_SERVER[ 'PHP_SELF' ];
-$link_array = explode( '/', $link );
-$page = end( $link_array );
-if ($page === '' || $page === 'index.php') $page = 'index';
+$page = $page ?? 'default'; 
+//$page ="index-3"; 
+
 ?>
 
 <?php if ($page !== 'index-2' && $page !== 'index-3' && $page !== 'index-4' && $page !== 'index-5' && $page !== 'index-6' && $page !== 'index' && $page !== 'index-rtl' && $page !== '/') {   ?>
-    
+   
     <div class="main-header">
         <!-- Header Topbar-->
         <div class="header-topbar text-center bg-transparent">
@@ -1805,7 +1804,7 @@ if ($page === '' || $page === 'index.php') $page = 'index';
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between flex-wrap">
                     <div class="d-flex align-items-center flex-wrap">
-                        <p class="d-flex align-items-center fs-14 mb-2 me-3 "><i class="isax isax-call5 me-2"></i>Toll Free : +1 56565 56594</p>
+                        <p class="d-flex align-items-center fs-14 mb-2 me-3 "><i class="isax isax-call5 me-2"></i>Numero de Contacto : +1 56565 56594</p>
                         <p class="mb-2 d-flex align-items-center fs-14"><i class="isax isax-message-text-15 me-2"></i>Email : info@example.com</p>
                     </div>
                     <div class="d-flex align-items-center">
@@ -1934,80 +1933,15 @@ if ($page === '' || $page === 'index.php') $page = 'index';
                         </div>
                         <nav id="mobile-menu">
                             <ul class="main-nav">
-                                <li class="has-submenu megamenu <?php echo ($page == 'index' || $page == 'index-2' || $page == 'index-3' || $page == 'index-4'|| $page == 'index-5'|| $page == 'index-6') ? 'active subdrop' : ''; ?>">
-                                    <a href="javascript:void(0);">Home<i class="fa-solid fa-angle-down"></i></a>
-                                    <ul class="submenu mega-submenu">
-                                        <li>
-                                            <div class="megamenu-wrapper">
-                                                <div class="d-none d-lg-flex align-items-center justify-content-between flex-wrap">
-                                                    <h6 class="mb-3">Home Pages</h6>
-                                                    <a href="javascript:void(0);" class="btn btn-dark btn-md mb-3 text-white d-inline-block w-auto">Purchase Template</a>
-                                                </div>
-                                                <div class="row g-lg-4">
-                                                    <div class="col-lg-2">
-                                                        <div class="single-demo <?php echo ($page == 'index') ? 'active' : ''; ?>">
-                                                            <div class="demo-img">
-                                                                <a href="<?php echo base_url(); ?>index"><img src="<?php echo base_url(); ?>assets/img/menu/home-01.jpg" class="img-fluid" alt="img"></a>
-                                                            </div>
-                                                            <div class="demo-info">
-                                                                <a href="<?php echo base_url(); ?>index">All Bookings</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <div class="single-demo <?php echo ($page == 'index-2') ? 'active' : ''; ?>">
-                                                            <div class="demo-img">
-                                                                <a href="<?php echo base_url(); ?>index-2"><img src="<?php echo base_url(); ?>assets/img/menu/home-02.jpg" class="img-fluid" alt="img"></a>
-                                                            </div>
-                                                            <div class="demo-info">
-                                                                <a href="<?php echo base_url(); ?>index-2">Hotels</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <div class="single-demo <?php echo ($page == 'index-3') ? 'active' : ''; ?>">
-                                                            <div class="demo-img">
-                                                                <a href="<?php echo base_url(); ?>index-3"><img src="<?php echo base_url(); ?>assets/img/menu/home-03.jpg" class="img-fluid" alt="img"></a>
-                                                            </div>
-                                                            <div class="demo-info">
-                                                                <a href="<?php echo base_url(); ?>index-3">Cars</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <div class="single-demo <?php echo ($page == 'index-4') ? 'active' : ''; ?>">
-                                                            <div class="demo-img">
-                                                                <a href="<?php echo base_url(); ?>index-4"><img src="<?php echo base_url(); ?>assets/img/menu/home-04.jpg" class="img-fluid" alt="img"></a>
-                                                            </div>
-                                                            <div class="demo-info">
-                                                                <a href="<?php echo base_url(); ?>index-4">Flight</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <div class="single-demo <?php echo ($page == 'index-5') ? 'active' : ''; ?>">
-                                                            <div class="demo-img">
-                                                                <a href="<?php echo base_url(); ?>index-5"><img src="<?php echo base_url(); ?>assets/img/menu/home-05.jpg" class="img-fluid" alt="img"></a>
-                                                            </div>
-                                                            <div class="demo-info">
-                                                                <a href="<?php echo base_url(); ?>index-5">Cruise</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <div class="single-demo <?php echo ($page == 'index-6') ? 'active' : ''; ?></div>">
-                                                            <div class="demo-img">
-                                                                <a href="<?php echo base_url(); ?>index-6"><img src="<?php echo base_url(); ?>assets/img/menu/home-06.jpg" class="img-fluid" alt="img"></a>
-                                                            </div>
-                                                            <div class="demo-info">
-                                                                <a href="<?php echo base_url(); ?>index-6">Tours</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                
+                            
+                      
+                                <li class="has-submenu megamenu <?php echo ($page == 'index' ? 'active subdrop' : ''); ?>">
+                                    <a href="<?= site_url('/') ?>"><?= lang('Site.menu.home') ?><i class="fa-solid"></i></a>
+                                </li>
+
+                                <li class="has-submenu megamenu <?php echo ($page == 'tours' ? 'active subdrop' : ''); ?>">
+                                    <a href="<?= site_url('tours') ?>"><?= lang('Site.menu.tours') ?><i class="fa-solid "></i></a>
                                 </li>
                                 <li class="has-submenu mega-innermenu <?php echo ($page == 'flight-grid' || $page == 'flight-list' || $page == 'flight-details' || $page == 'flight-booking-confirmation'|| $page == 'add-flight') ? 'active subdrop' : ''; ?>">
                                     <a href="javascript:void(0);">Flight<i class="fa-solid fa-angle-down"></i></a>
@@ -2246,8 +2180,26 @@ if ($page === '' || $page === 'index.php') $page = 'index';
                                     <i class="isax isax-heart"></i><span class="count-icon bg-secondary text-gray-9">0</span>
                                 </a>
                             </div>
-                            <a href="<?php echo base_url(); ?>add-flight" class="btn btn-dark d-inline-flex align-items-center me-3"><i class="isax isax-lock me-2"></i>Add Your Listing</a>
-                            <a href="<?php echo base_url(); ?>register" class="btn btn-dark d-inline-flex align-items-center me-0"><i class="isax isax-lock me-2"></i>Sign Up</a>
+                            <!-- <a href="<?php echo base_url(); ?>add-flight" class="btn btn-dark d-inline-flex align-items-center me-3"><i class="isax isax-lock me-2"></i>Add Your Listing</a> -->
+                            <?php if (session()->has('user')): ?>
+                                
+
+
+                                <?php // --- El usuario SÍ ha iniciado sesión --- ?>
+                                <a href="<?= site_url('auth/logout') ?>" class="btn btn-dark d-inline-flex align-items-center me-0">
+                                    <i class="isax isax-logout me-2"></i><?= lang('Site.menu.logout') ?>
+                                </a>
+
+                            <?php else: ?>
+
+                                <?php // --- El usuario NO ha iniciado sesión --- ?>
+                                <!-- <a href="<?= site_url('auth/login') ?>" class="btn btn-dark d-inline-flex align-items-center me-0">
+                                    <i class="isax isax-login me-2"></i><?= lang('Site.menu.login') ?>
+                                </a> -->
+                                <a href="javascript:void(0);" class="btn btn-white me-3" data-bs-toggle="modal" data-bs-target="#login-modal"><?= lang('Site.menu.login') ?></a>
+
+
+                            <?php endif; ?>
                             <div class="header__hamburger d-xl-none my-auto">
                                 <div class="sidebar-menu">
                                     <i class="isax isax-menu5"></i>
@@ -3138,3 +3090,8 @@ if ($page === '' || $page === 'index.php') $page = 'index';
     </div>
 
 <?php } ?>
+
+
+
+
+ 

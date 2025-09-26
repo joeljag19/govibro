@@ -14,5 +14,9 @@ return [
         'pages'         => 'Páginas',
         'dashboard'     => 'Panel',
         'addListing'    => 'Añadir Anuncio',
+        'registrarse'   => 'Registrarse',
+        'login'         => 'Iniciar Sesión',
+        'logout'        => 'Cerrar Sesión',
+        'wishlist'      => 'Lista de Deseos',
     ],
 ];

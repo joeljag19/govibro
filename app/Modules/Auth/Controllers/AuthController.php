@@ -106,7 +106,7 @@ class AuthController extends \CodeIgniter\Controller
         }
 
         session()->destroy();
-        return redirect()->to('/auth/login')->with('success', 'Sesión cerrada exitosamente.');
+        return redirect()->to('/')->with('success', 'Sesión cerrada exitosamente.');
     }
 
       public function register()

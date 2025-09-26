@@ -72,30 +72,24 @@ class ToursController  extends BaseController
         return view('App\Modules\AdminTours\Views\tours\index', $data);
     }
 
-    public function create()
+   public function create()
     {
-        $categoryModel = new TourCategoryModel();
-        $locationModel = new LocationModel();
-        $termsModel = new TermsAdminModel();
-
+        // Simplemente sobrescribes la configuración que necesitas
+        $this->data['assets']['css'][] = 'quill';
+        $this->data['assets']['js'][]  = 'quill';
+        // Ya no es necesario $this->layoutOptions['header_style'] = 'default';
+        // ni $this->layoutOptions['show_topbar'] = true; porque ya son el valor por defecto.
+        
+        // Datos específicos para esta vista
         $data = [
-            'categories' => $categoryModel->findAll(),
-            'locations'  => $locationModel->findAll(),
-            'terms'      => $termsModel->getTermsWithAttributeName(),
+            'categories' => (new TourCategoryModel())->findAll(),
+            'locations'  => (new LocationModel())->findAll(),
+            'terms'      => (new TermsAdminModel())->getTermsWithAttributeName(),
         ];
 
-        $this->assets['css'][] = 'quill';
-        $this->assets['js'][]  = 'quill';
-        // $this->assets['js'][] = 'googlemaps';
-       $this->layoutOptions['header_style'] = 'default'; // Usa la cabecera estándar
-        $this->layoutOptions['show_topbar'] = true;     // Muestra la barra superior
-
-
         
+        // Renderizamos la vista con la función render() del BaseController
         return $this->render('App\Modules\AdminTours\Views\tours\create-fe', $data);
-
-
-        //return view('App\Modules\AdminTours\Views\tours\create-fe', $data);
     }
 
     // --- MÉTODOS ACTUALIZADOS DE store() Y update() EN ToursController ---
@@ -264,9 +258,11 @@ public function edit($id)
     }
 
     // 3. SOLICITAR LOS ASSETS NECESARIOS PARA LA VISTA DE EDICIÓN
-    $this->assets['css'][] = 'quill';      // Para el editor de texto
-    $this->assets['js'][]  = 'quill';
-    $this->assets['js'][]  = 'googlemaps'; // Para el mapa de ubicación
+    $this->data['assets']['css'][] = 'quill';
+    $this->data['assets']['js'][]  = 'quill';
+    $this->data['assets']['js'][]  = 'googlemaps';
+
+
 
     // 4. RENDERIZAR LA NUEVA VISTA USANDO EL MÉTODO render()
     // Esto asegura que tanto los datos del tour ($data) como los assets ($this->assets) se pasen a la plantilla.

@@ -55,13 +55,13 @@ class Tours extends BaseController
 
 
 
-        $this->assets['css'][] = 'slick';
-        $this->assets['css'][] = 'rangeslider';
-        $this->assets['css'][] = 'fancybox';
+        $this->data['assets']['css'][] = 'slick';
+        $this->data['assets']['css'][] = 'rangeslider';
+        $this->data['assets']['css'][] = 'fancybox';
 
-        $this->assets['js'][]  = 'slick';
-        $this->assets['js'][]  = 'fancybox';
-        $this->assets['js'][]  = 'rangeslider';
+        $this->data['assets']['js'][]  = 'slick';
+        $this->data['assets']['js'][]  = 'fancybox';
+        $this->data['assets']['js'][]  = 'rangeslider';
         
         return $this->render('App\Modules\Tours\Views\tour-grid', $data);
     }
@@ -143,10 +143,10 @@ class Tours extends BaseController
         ];
 
         // PASO 3: Solicita los assets que esta página necesita
-        $this->assets['css'][] = 'slick';
-        $this->assets['css'][] = 'fancybox';
-        $this->assets['js'][]  = 'slick';
-        $this->assets['js'][]  = 'fancybox';
+        $this->data['assets']['css'][] = 'slick';
+        $this->data['assets']['css'][] = 'fancybox';
+        $this->data['assets']['js'][]  = 'slick';
+        $this->data['assets']['js'][]  = 'fancybox';
 
         $this->layoutOptions['seo_title'] = $tour['seo_title'] ?: $tour['title'];
         $this->layoutOptions['seo_description'] = $tour['seo_description'] ?: ellipsize($tour['short_desc'], 150);

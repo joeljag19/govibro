@@ -14,5 +14,9 @@ return [
         'pages'         => 'Pages',
         'dashboard'     => 'Dashboard',
         'addListing'    => 'Add Listing',
+        'registrarse'   => 'Register',
+        'login'         => 'Login',
+        'logout'        => 'Logout',
+        'wishlist'      => 'Wishlist',
     ],
 ];

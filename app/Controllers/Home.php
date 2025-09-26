@@ -1,9 +1,11 @@
 <?php
 namespace App\Controllers;
+use App\Controllers\BaseController;
+
 
 use CodeIgniter\Controller;
 
-class Home extends Controller
+class Home extends BaseController
 {
 
     // public function dashboard()
@@ -117,9 +119,10 @@ class Home extends Controller
     //     return view('pages/index', $data);
     // }
 
-      public function Index(): string
-    {
-        return view('index-4');
+	public function Index(): string
+{
+		// $this->data['page'] = 'index-4'; 
+		return $this->render('index-6', $this->data);
     }
 	public function AdminIndex()
 	{

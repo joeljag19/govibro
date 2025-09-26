@@ -17,23 +17,7 @@ Lista de Tours
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-bar breadcrumb-bg-02 text-center">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-12">
-                    <h2 class="breadcrumb-title mb-2">Tours</h2>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center mb-0">
-                            <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Inicio</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Lista de Tours</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Breadcrumb -->
+
 
     <div class="content">
         <div class="container">
@@ -60,7 +44,7 @@ Lista de Tours
                                     <h2 class="accordion-header"><div class="accordion-button p-0" data-bs-toggle="collapse" data-bs-target="#accordion-price"><i class="isax isax-coin me-2 text-primary"></i>Precio</div></h2>
                                     <div id="accordion-price" class="accordion-collapse collapse show">
                                         <div class="accordion-body">
-                                            <div class="filter-range"><input type="text" id="range_price" name="price_range"></div>
+                                            <div class="filter-range"><input type="hidden" id="range_price" name="price_range"></div>
                                             <div class="filter-range-amount"><p class="fs-14">Rango: <span class="text-gray-9 fw-medium" id="priceRangeDisplay">$0 - $10000</span></p></div>
                                         </div>
                                     </div>

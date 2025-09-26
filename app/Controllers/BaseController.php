@@ -9,88 +9,62 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class BaseController
- *
- * BaseController provides a convenient place for loading components
- * and performing functions that are needed by all your controllers.
- * Extend this class in any new controllers:
- *     class Home extends BaseController
- *
- * For security be sure to declare any new methods as protected or private.
- */
 abstract class BaseController extends Controller
 {
     /**
-     * Instance of the main Request object.
+     * Instancia del objeto de la solicitud principal.
      *
      * @var CLIRequest|IncomingRequest
      */
     protected $request;
 
     /**
-     * An array of helpers to be loaded automatically upon
-     * class instantiation. These helpers will be available
-     * to all other controllers that extend BaseController.
+     * Un array de helpers para cargar automáticamente al instanciar la clase.
      *
      * @var list<string>
      */
     protected $helpers = [];
 
-     /**
-     * @var array
-     * Almacena los assets (CSS/JS) que necesita la página actual.
-     */
-    protected $assets = [
-        'css' => [],
-        'js'  => [],
-    ];
-
     /**
      * @var array
-     * Opciones para la plantilla, como mostrar/ocultar elementos.
+     * Almacena datos comunes que se pasarán a todas las vistas.
      */
-    protected $layoutOptions = [
-        'show_topbar' => true, // Por defecto, siempre mostramos la barra superior
-    ];
+    protected $data = [];
 
     /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
-     */
-    // protected $session;
-
-    /**
-     * @return void
+     * Constructor.
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // Do Not Edit This Line
+        // No modificar esta línea
         parent::initController($request, $response, $logger);
 
         // Establece el idioma para la petición actual basándose en la sesión.
         $session = session();
         if ($session->has('user_locale')) {
-            // Si hay un idioma guardado en la sesión, úsalo.
             $this->request->setLocale($session->get('user_locale'));
         }
-        // Si no hay nada en la sesión, CodeIgniter usará el idioma por defecto
-        // que configuramos en app/Config/App.php ('es').
 
-            // Preload any models, libraries, etc, here.
-
-            // E.g.: $this->session = \Config\Services::session();
-        }
+        // Definir valores predeterminados para todas las vistas
+        $this->data['page'] = 'index-4'; // Valor por defecto global
+        $this->data['assets'] = [
+            'css' => [],
+            'js'  => [],
+        ];
+        $this->data['layoutOptions'] = [
+            'header_style' => 'default',
+            'show_topbar' => true,
+        ];
+    }
 
     /**
-     * Método helper para renderizar vistas, pasando assets y opciones de layout.
+     * Método para renderizar vistas, pasando assets y opciones de layout.
      */
     protected function render(string $view, array $data = [])
     {
-        // Pasa la variable $assets a todas las vistas renderizadas con este método.
-        $data['assets'] = $this->assets;
-        $data['layoutOptions'] = $this->layoutOptions;
+        // Fusiona los datos pasados localmente con los datos globales del BaseController
+        $finalData = array_merge($this->data, $data);
 
-        return view($view, $data);
+        return view($view, $finalData);
     }
 }
