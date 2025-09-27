@@ -1,3 +1,4 @@
+
 <?php
 return [
     // Topbar
@@ -18,5 +19,22 @@ return [
         'login'         => 'Login',
         'logout'        => 'Logout',
         'wishlist'      => 'Wishlist',
+    ],
+
+    'text' => [
+        'welcome'           => 'Welcome to Govibro',
+        'searchPlaceholder' => 'Search Tours, Flights, Hotels...',
+        'accountSignIn'     => 'Sign in to Start Managing your GoVibro Account',
+
+        // Authentication Texts
+        'auth' => [
+            'email'             => 'Email',
+            'enterEmail'        => 'Enter Email',
+            'enterPassword'     => 'Enter Password',
+            'rememberMe'        => 'Remember Me',
+            'forgotPassword'    => 'Forgot Password?',
+            'noAccount'         => 'Don\'t you have an account?',
+            'signUp'            => 'Sign up',
+        ],
     ],
 ];

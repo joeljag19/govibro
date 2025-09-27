@@ -43,6 +43,12 @@ $routes->get('language/set/(:segment)', 'LanguageController::set/$1');
 // Ruta para el sitemap XML
 $routes->get('sitemap.xml', 'SitemapController::index');
 
+//Ruta API Banco Popular
+//$routes->post('bancopopular/webhook', 'App\Controllers\BancopopularContoller::webhook');
+
+$routes->post('bancopopular/webhook', 'BancopopularController::webhook');
+
+$routes->get('api/exchange-rate', 'CurrencyController::getExchangeRate');
 
 
 

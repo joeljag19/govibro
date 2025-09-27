@@ -1808,26 +1808,38 @@ $page = $page ?? 'default';
                         <p class="mb-2 d-flex align-items-center fs-14"><i class="isax isax-message-text-15 me-2"></i>Email : info@example.com</p>
                     </div>
                     <div class="d-flex align-items-center">
+                        
+                         <?php
+                        $locale = service('request')->getLocale();
+                        ?>
+
                         <div class="dropdown flag-dropdown mb-2 me-3">
                             <a href="javascript:void(0);" class="dropdown-toggle d-inline-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="<?php echo base_url(); ?>assets/img/flags/us-flag.svg" class="me-2" alt="flag">ENG
+                                
+                                <?php // Lógica para mostrar la bandera y el texto del idioma activo ?>
+                                <?php if ($locale === 'es'): ?>
+                                    <img src="<?= base_url('assets/img/flags/es.png') ?>" class="me-2" alt="Bandera de España"> ESP
+                                <?php else: ?>
+                                    <img src="<?= base_url('assets/img/flags/us-flag.svg') ?>" class="me-2" alt="Bandera de EE.UU."> ENG
+                                <?php endif; ?>
+
                             </a>
                             <ul class="dropdown-menu p-2 mt-2">
+                              
+                            
                                 <li>
-                                    <a class="dropdown-item rounded d-flex align-items-center" href="javascript:void(0);">
-                                        <img src="<?php echo base_url(); ?>assets/img/flags/us-flag.svg" class="me-2" alt="flag">ENG
+                                    <?php // Enlace para cambiar a Inglés ?>
+                                    <a class="dropdown-item rounded d-flex align-items-center" href="<?= site_url('language/set/en') ?>">
+                                        <img src="<?= base_url('assets/img/flags/us-flag.svg') ?>" class="me-2" alt="Bandera de EE.UU.">ENG
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item rounded d-flex align-items-center" href="javascript:void(0);">
-                                        <img src="<?php echo base_url(); ?>assets/img/flags/arab-flag.svg" class="me-2" alt="flag">ARA
+                                    <?php // Enlace para cambiar a Español ?>
+                                    <a class="dropdown-item rounded d-flex align-items-center" href="<?= site_url('language/set/es') ?>">
+                                        <img src="<?= base_url('assets/img/flags/es.png') ?>" class="me-2" alt="Bandera de España">ESP
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item rounded d-flex align-items-center" href="javascript:void(0);">
-                                        <img src="<?php echo base_url(); ?>assets/img/flags/france-flag.svg" class="me-2" alt="flag">FRA
-                                    </a>
-                                </li>
+                                <?php // Puedes añadir más idiomas aquí en el futuro cuando los soportes ?>
                             </ul>
                         </div>
                         <div class="dropdown mb-2">
@@ -2196,9 +2208,9 @@ $page = $page ?? 'default';
                                 <!-- <a href="<?= site_url('auth/login') ?>" class="btn btn-dark d-inline-flex align-items-center me-0">
                                     <i class="isax isax-login me-2"></i><?= lang('Site.menu.login') ?>
                                 </a> -->
-                                <a href="javascript:void(0);" class="btn btn-white me-3" data-bs-toggle="modal" data-bs-target="#login-modal"><?= lang('Site.menu.login') ?></a>
+                                <div><a href="javascript:void(0);" class="btn btn-white me-3" data-bs-toggle="modal" data-bs-target="#login-modal"><?= lang('Site.menu.login') ?></a></div>
 
-
+                            <!-- <a href="javascript:void(0);" class="btn btn-dark d-inline-flex align-items-center me-0"><i class="isax isax-lock me-2" data-bs-toggle="modal" data-bs-target="#login-modal"></i><?= lang('Site.menu.login') ?></a> -->
                             <?php endif; ?>
                             <div class="header__hamburger d-xl-none my-auto">
                                 <div class="sidebar-menu">
