@@ -11,7 +11,8 @@ class OwnerModel extends Model
         'user_id',
         'platform_commission_percentage',
         'company_name',
-        'contact_phone'
+        'contact_phone',
+        'currency' // 'DOP' 'USD o 'EUR'
     ];
     protected $useTimestamps = true;
 }

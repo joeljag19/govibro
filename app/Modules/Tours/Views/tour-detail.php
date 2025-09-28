@@ -234,7 +234,7 @@ $all_images = array_merge($all_images, $gallery);
                     <div class="card-body">
                         <div class="mb-3">
                             <p class="fs-13 fw-medium mb-1">Desde</p>
-                            <h5 class="text-primary mb-1">$<?= number_format($tour['price'], 2) ?> <span class="fs-14 text-default fw-normal">/ por persona</span></h5>
+                            <h5 class="text-primary mb-1">$<?= number_format($tour['price_base'], 2) ?> <span class="fs-14 text-default fw-normal">/ por persona</span></h5>
                         </div>
                         <div class="banner-form">
                             <form action="<?= base_url('tours/saveBooking/' . $tour['id']) ?>" method="post">

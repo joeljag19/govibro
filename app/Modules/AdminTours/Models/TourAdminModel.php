@@ -3,6 +3,8 @@ namespace App\Modules\AdminTours\Models;
 
 use App\Models\TourModel as BaseTourModel;
 use App\Models\TourTranslationsModel;
+use App\Services\CurrencyService;  //Servicio de cambio de moneda
+use App\Modules\AdminTours\Models\OwnerModel; //Modelo de propietarios
 
 
 class TourAdminModel extends BaseTourModel
@@ -50,171 +52,97 @@ class TourAdminModel extends BaseTourModel
                     ->paginate(10);
     }
 
-    /**
-     * Crea un nuevo tour con todos sus detalles, incluyendo la subida de archivos.
-     * Encapsula toda la lógica en una transacción de base de datos.
-     *
-     * @param array $postData Datos del formulario ($_POST)
-     * @param array $files    Archivos subidos ($_FILES)
-     * @param array $user     Datos del usuario en sesión
-     * @return int|null       El ID del tour creado, o null si falla.
-     * @throws \Exception
-     */
-    // En app/Modules/AdminTours/Models/TourAdminModel.php
 
-    // public function createTourWithDetails(array $postData, array $files, array $user)
-    // {
-    //     $this->db->transStart();
-    //     try {
-    //         // --- 1. DEFINIR LA RUTA DE SUBIDA ESPECÍFICA PARA TOURS ---
-    //         $uploadPath = ROOTPATH . 'public/uploads/tours/';
-
-    //         // Asegurarse de que el directorio de subida exista
-    //         if (!is_dir($uploadPath)) {
-    //             mkdir($uploadPath, 0777, true);
-    //         }
-
-    //         // --- 2. PROCESAR IMAGEN PRINCIPAL ---
-    //         $imageName = null;
-    //         $imageFile = $files['image'] ?? null;
-    //         if ($imageFile && $imageFile->isValid()) {
-    //             $imageName = $imageFile->getRandomName();
-    //             $imageFile->move($uploadPath, $imageName); // Mover a la nueva carpeta
-
-    //             // Redimensionar la imagen principal
-    //             \Config\Services::image()
-    //                 ->withFile($uploadPath . $imageName)
-    //                 ->fit(1284, 600, 'center')
-    //                 ->save($uploadPath . $imageName);
-
-            
-    //             // Crear la miniatura para la imagen principal a 400x400
-    //             $thumbName = pathinfo($imageName, PATHINFO_FILENAME) . '_thumb.' . pathinfo($imageName, PATHINFO_EXTENSION);
-    //             \Config\Services::image()->withFile($uploadPath . $imageName)
-    //                 ->fit(400, 400, 'center')
-    //                 ->save($uploadPath . $thumbName);
-    //         }
-
-    //         // --- 3. PROCESAR GALERÍA CON MINIATURAS ---
-    //         $galleryImageNames = [];
-    //         $galleryFiles = $files['gallery'] ?? [];
-    //         foreach ($galleryFiles as $file) {
-    //             if ($file && $file->isValid()) {
-    //                 $newName = $file->getRandomName();
-    //                 $file->move($uploadPath, $newName); // Mover a la nueva carpeta
-
-    //                 // Redimensionar imagen grande
-    //                 \Config\Services::image()->withFile($uploadPath . $newName)->fit(1284, 600, 'center')->save($uploadPath . $newName);
-
-    //                 // Crear miniatura
-    //                 $thumbName = pathinfo($newName, PATHINFO_FILENAME) . '_thumb.' . pathinfo($newName, PATHINFO_EXTENSION);
-    //                 \Config\Services::image()->withFile($uploadPath . $newName)->fit(400, 400, 'center')->save($uploadPath . $thumbName);
-                    
-    //                 $galleryImageNames[] = $newName;
-    //             }
-    //         }
-            
-    //         // --- 4. PREPARAR Y GUARDAR DATOS ---
-    //         $tourData = [
-    //             'title' => $postData['title'],
-    //             'slug'  => mb_url_title($postData['title'], '-', true),
-    //             'category_id' => $postData['category_id'],
-    //             'location_id' => $postData['location_id'],
-    //             'price' => (float)$postData['price'],
-    //             'sale_price' => !empty($postData['sale_price']) ? (float)$postData['sale_price'] : null,
-    //             'short_desc' => $postData['short_desc'],
-    //             'content' => $postData['content'],
-    //             'video' => $postData['video'],
-    //             'duration' => $postData['duration'],
-    //             'include' => $postData['include'] ?? '[]',
-    //             'exclude' => $postData['exclude'] ?? '[]',
-    //             'itinerary' => $postData['itinerary'] ?? '[]',
-    //             'owner_id' => $user['id'],
-    //             'address' => $postData['address'] ?? null,
-    //             'location_id' => $postData['location_id'],
-    //             'address' => $postData['address'] ?? null,
-    //             'map_lat' => $postData['map_lat'] ?? null,
-    //             'map_lng' => $postData['map_lng'] ?? null,
-    //             'map_zoom' => $postData['map_zoom'] ?? null,
-    //             'faqs'=> $postData['faqs'] ?? '[]',
-    //             'approval_status' => ($user['role'] === 'super_admin') ? 'approved' : 'pending',
-    //             'status' => $postData['status'] ?? 'draft',
-    //             'image_id' => $imageName,
-    //             'gallery'  => json_encode($galleryImageNames)
-    //         ];
-
-    //         $this->insert($tourData);
-    //         $tourId = $this->getInsertID();
-
-    //         if (!$tourId) throw new \Exception('Error al crear el tour principal.');
-            
-    //         $this->db->transComplete();
-    //         if ($this->db->transStatus() === false) return null;
-    //         return $tourId;
-
-    //     } catch (\Exception $e) {
-    //         $this->db->transRollback();
-    //         log_message('error', '[TourAdminModel::create] ' . $e->getMessage());
-    //         return null;
-    //     }
-    // }
-
-// En AdminTours/Models/TourAdminModel.php
-
-public function createTourWithDetails(array $postData, array $files, array $user)
+/**
+ * Crea un nuevo tour con todos sus detalles, incluyendo la subida de archivos,
+ * redimensionamiento de imágenes y conversión de moneda.
+ *
+ * @param array $postData Datos del formulario ($_POST)
+ * @param array $files    Archivos subidos ($_FILES)
+ * @param array $user     Datos del usuario en sesión
+ * @return int|null       El ID del tour creado, o null si falla.
+ */
+public function createTourWithDetails(array $postData, array $files, array $user): ?int
 {
-    // CAMBIO: Cargamos tu helper para poder usar la nueva función.
-    helper(['Imagenredimension','Slug']);
+    // Cargar helpers necesarios. (Asegúrate de que 'text' esté en app/Config/Autoload.php)
+    helper(['ImageHelper', 'text']);
 
     $this->db->transStart();
 
     try {
-        // --- PROCESAR IMAGEN PRINCIPAL USANDO EL HELPER ---
+        // --- 1. OBTENER LA MONEDA DEL OWNER ---
+        $ownerModel = new OwnerModel();
+        $ownerProfile = $ownerModel->where('user_id', $user['id'])->first();
+        // Si no tiene perfil o moneda, se usa USD por defecto.
+        $ownerCurrency = $ownerProfile['currency'] ?? 'USD';
+
+        // --- 2. CONVERSIÓN DE MONEDA ---
+        $currencyService = new CurrencyService();
+        $ownerPrice = (float)($postData['owner_price'] ?? 0);
+        $priceBase = null;
+
+        if ($ownerCurrency === 'USD') {
+            $priceBase = $ownerPrice;
+        } else {
+            // Usamos el servicio para obtener la tasa de conversión a USD
+            $rate = $currencyService->getConversionRate($ownerCurrency, 'USD');
+            if ($rate === null) {
+                // Si la API falla, detenemos la operación de forma segura.
+                throw new \Exception("No se pudo obtener la tasa de cambio para {$ownerCurrency}.");
+            }
+            $priceBase = $ownerPrice / $rate; // Tasa de venta del dólar en DOP
+        }
+
+        // --- 3. PROCESAR IMÁGENES USANDO EL HELPER ---
         $imageName = null;
         $imageFile = $files['image'] ?? null;
         if ($imageFile && $imageFile->isValid()) {
-            // La nueva función hace todo el trabajo pesado en una sola línea
             $imageName = processAndResizeImage($imageFile, 'tours'); 
         }
 
-        // --- PROCESAR GALERÍA USANDO EL HELPER ---
         $galleryImageNames = [];
         $galleryFiles = $files['gallery'] ?? [];
         foreach ($galleryFiles as $file) {
-            // Llamamos a la función para cada imagen de la galería
             if ($processedName = processAndResizeImage($file, 'tours')) {
                 $galleryImageNames[] = $processedName;
             }
         }
         
-        // --- PREPARAR Y GUARDAR DATOS (Esto se queda igual) ---
-        $dataToSave = [
-            'title'        => $postData['title'],
-            'slug'         => url_title(limpiar_string($postData['title']), '-', true),
-            'category_id'  => $postData['category_id'],
-            'location_id'  => $postData['location_id'],
-            'short_desc'   => $postData['short_desc'] ?? null,
-            'content'      => $postData['content'] ?? null,
-            'video'        => $postData['video'] ?? null,
-            'duration'     => $postData['duration'] ?? null,
-            'price'        => !empty($postData['price']) ? (float)$postData['price'] : null,
-            'sale_price'   => !empty($postData['sale_price']) ? (float)$postData['sale_price'] : null,
-            'address'      => $postData['address'] ?? null,
-            'map_lat'      => $postData['map_lat'] ?? null,
-            'map_lng'      => $postData['map_lng'] ?? null,
-            'map_zoom'     => $postData['map_zoom'] ?? 12,
-            'status'       => $postData['status'] ?? 'draft',
-            'is_featured'  => $postData['is_featured'] ?? 0,
-            'owner_id'     => $user['id'],
-            'image_id'     => $imageName,
-            'gallery'      => json_encode($galleryImageNames),
-            'include'      => json_encode($postData['include'] ?? []),
-            'exclude'      => json_encode($postData['exclude'] ?? []),
-            'itinerary'    => json_encode($postData['itinerary'] ?? []),
-            'faqs'         => json_encode($postData['faqs'] ?? []),
+        // --- 4. PREPARAR Y GUARDAR DATOS ---
+        $tourData = [
+            'title'          => $postData['title'],
+            'slug'           => mb_url_title($postData['title'], '-', true), // Usamos la función nativa más robusta
+            'category_id'    => $postData['category_id'],
+            'location_id'    => $postData['location_id'],
+            'short_desc'     => $postData['short_desc'] ?? null,
+            'content'        => $postData['content'] ?? null,
+            'video'          => $postData['video'] ?? null,
+            'duration'       => $postData['duration'] ?? null,
+            
+            // Campos de moneda
+            'owner_price'    => $ownerPrice,
+            'owner_currency' => $ownerCurrency,
+            'price_base'     => round($priceBase, 2), // Guardamos el precio en USD redondeado
+            'sale_price'     => !empty($postData['sale_price']) ? (float)$postData['sale_price'] : null, // Asumimos que sale_price también se ingresa en la moneda del owner
+
+            'address'        => $postData['address'] ?? null,
+            'map_lat'        => $postData['map_lat'] ?? null,
+            'map_lng'        => $postData['map_lng'] ?? null,
+            'map_zoom'       => $postData['map_zoom'] ?? 12,
+            'status'         => $postData['status'] ?? 'draft',
+            'is_featured'    => $postData['is_featured'] ?? 0,
+            'owner_id'       => $user['id'],
+            'image_id'       => $imageName,
+            'gallery'        => json_encode($galleryImageNames),
+            'include'        => json_encode($postData['include'] ?? []),
+            'exclude'        => json_encode($postData['exclude'] ?? []),
+            'itinerary'      => json_encode($postData['itinerary'] ?? []),
+            'faqs'           => json_encode($postData['faqs'] ?? []),
+            'seo_title'      => $postData['seo_title'] ?? null,
+            'seo_description'=> $postData['seo_description'] ?? null,
         ];
 
-        $this->insert($dataToSave);
+        $this->insert($tourData);
         $tourId = $this->getInsertID();
 
         if (!$tourId) {
@@ -236,8 +164,6 @@ public function createTourWithDetails(array $postData, array $files, array $user
     }
 }
 
-
-// En AdminTours/Models/TourAdminModel.php
 
 public function updateTourWithDetails($tourId, array $postData, array $files, array $user)
 {

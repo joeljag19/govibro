@@ -18,7 +18,7 @@
                             <p class="d-flex align-items-center mb-2"><i class="isax isax-location5 me-2"></i><?= esc($tour['location_name'] ?? 'Sin Ubicación') ?></p>
                             <p class="fs-14 text-gray-6"><?= esc(word_limiter($tour['short_desc'], 20)) ?></p>
                             <div class="d-flex align-items-center justify-content-between border-top pt-3">
-                                <h6 class="d-flex align-items-center text-gray-6 fs-14 fw-normal">Desde <span class="ms-1 fs-18 fw-semibold text-primary">$<?= number_format($tour['price'], 2) ?></span></h6>
+                                <h6 class="d-flex align-items-center text-gray-6 fs-14 fw-normal">Desde <span class="ms-1 fs-18 fw-semibold text-primary">$<?= number_format($tour['price_base'], 2) ?></span></h6>
                                 <a href="<?= base_url('tours/' . $tour['slug']) ?>" class="btn btn-primary btn-sm">Ver Detalles</a>
                             </div>
                         </div>

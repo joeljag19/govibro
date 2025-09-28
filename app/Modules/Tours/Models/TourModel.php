@@ -42,10 +42,10 @@ class TourModel extends BaseTourModel
             $builder->whereIn('tours.category_id', $filters['categories']);
         }
         if (isset($filters['price_min'])) {
-            $builder->where('tours.price >=', $filters['price_min']);
+            $builder->where('tours.price_base >=', $filters['price_min']);
         }
         if (isset($filters['price_max'])) {
-            $builder->where('tours.price <=', $filters['price_max']);
+            $builder->where('tours.price_base <=', $filters['price_max']);
         }
 
         if ($paginate) {

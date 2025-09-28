@@ -18,7 +18,7 @@
                     <h5 class="mb-1 text-truncate"><a href="<?= base_url('tours/' . $tour['slug']) ?>"><?= esc($tour['title']) ?></a></h5>
                     <p class="d-flex align-items-center mb-3"><i class="isax isax-location5 me-2"></i><?= esc($tour['location_name']) ?></p>
                     <div class="d-flex align-items-center justify-content-between border-top pt-3">
-                        <h6 class="d-flex align-items-center text-gray-6 fs-14 fw-normal">Desde <span class="ms-1 fs-18 fw-semibold text-primary">$<?= number_format($tour['price'], 2) ?></span></h6>
+                        <h6 class="d-flex align-items-center text-gray-6 fs-14 fw-normal">Desde <span class="ms-1 fs-18 fw-semibold text-primary">$<?= number_format($tour['price_base'], 2) ?></span></h6>
                     </div>
                 </div>
             </div>
