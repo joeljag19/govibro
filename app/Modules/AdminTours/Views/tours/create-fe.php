@@ -377,6 +377,22 @@ $(document).ready(function() {
 
         $("#quill-content-input").val(quill.root.innerHTML);
 
+        // --- INICIO: LÓGICA DE GUARDADO PARA CAMPOS DINÁMICOS ---
+        const includes = Array.from($('#include-container .input-group')).map(el => ({ item: $(el).find('input').val() })).filter(i => i.item);
+        $('input[name="include"]').val(JSON.stringify(includes));
+        // (Aquí puedes añadir la misma lógica para exclude, itinerary, faqs...)
+
+        // Lógica específica para Tipos de Persona
+        const personTypes = Array.from($('#person-types-list .person-type-item')).map(el => ({ 
+            type: $(el).find('.person-type-text').val(), 
+            min: $(el).find('.person-type-min').val(), 
+            max: $(el).find('.person-type-max').val(), 
+            price: $(el).find('.person-type-price').val() 
+        })).filter(i => i.type && i.price);
+
+        $('#person-types-json').val(JSON.stringify(personTypes));
+        // --- FIN: LÓGICA DE GUARDADO ---
+
         var form = this;
         var formData = new FormData(form);
         var submitButton = $(this).find('button[type="submit"]');
@@ -522,6 +538,24 @@ $(document).ready(function() {
     });
 
     // --- DYNAMIC FIELDS MANAGEMENT ---
+    // --- Lógica para Tipos de Persona (Añadir y Mostrar/Ocultar) ---
+        $('#enable_person_types').change(function() {
+            $('#person-types-section').toggle(this.checked);
+        }).change();
+
+        let personTypeCounter = 0;
+        $('#add-person-type').on('click', function() {
+            const html = `
+            <div class="row align-items-center person-type-item mb-2">
+                <div class="col-md-3"><input type="text" class="form-control person-type-text" placeholder="Ej: Adulto"></div>
+                <div class="col-md-2"><input type="number" class="form-control person-type-min" placeholder="Mín."></div>
+                <div class="col-md-2"><input type="number" class="form-control person-type-max" placeholder="Máx."></div>
+                <div class="col-md-3"><input type="number" class="form-control person-type-price" placeholder="Precio" step="0.01"></div>
+                <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div>
+            </div>`;
+            $('#person-types-list').append(html);
+        });
+
     function addDynamicItem(containerId, template) { $(containerId).append(template); }
     let includeIndex = 0;
     $('#add-include').click(() => addDynamicItem('#include-container', `<div class="input-group mb-2"><input type="text" name="include[${includeIndex++}][item]" class="form-control" placeholder="Ej: Transporte incluido"><button class="btn btn-danger btn-sm remove-item" type="button">X</button></div>`));
@@ -539,7 +573,10 @@ $(document).ready(function() {
         addDynamicItem('#faq-container', html);
         faqIndex++;
     });
-    $(document).on('click', '.remove-item', function() { $(this).closest('.input-group, .itinerary-item, .faq-item').remove(); });
+
+    $(document).on('click', '.remove-item', function() { 
+    $(this).closest('.input-group, .itinerary-item, .faq-item, .person-type-item').remove(); 
+    });
 });
 </script>
 <?= $this->endSection() ?>
