@@ -123,36 +123,36 @@
                     <div class="card shadow-none" id="pricing">
                         <div class="card-header"><h5 class="fs-18">Precios</h5></div>
                         <div class="card-body">
-                             <div class="row">
-                                <div class="col-md-6 mb-3"><label class="form-label">Precio Base (USD)</label><input type="number" name="price" class="form-control <?= (session('errors.price')) ? 'is-invalid' : '' ?>" step="0.01" value="<?= old('price', $tour['price'] ?? '') ?>">
-                                <?php if (session('errors.price')): ?><div class="invalid-feedback"><?= session('errors.price') ?></div><?php endif; ?></div>
-                                <div class="col-md-6 mb-3"><label class="form-label">Precio de Oferta (USD)</label><input type="number" name="sale_price" class="form-control" step="0.01" value="<?= old('sale_price', $tour['sale_price'] ?? '') ?>"></div>
-                                <hr>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="enable_person_types" id="enable_person_types" <?= !empty($tourMeta['enable_person_types']) ? 'checked' : '' ?>>
-                                    <label class="form-check-label" for="enable_person_types">
-                                        Habilitar precios por tipo de persona (adultos, niños, etc.)
-                                    </label>
-                                </div>
-
-                                <div id="person-types-section" style="display: <?= !empty($tourMeta['enable_person_types']) ? 'block' : 'none' ?>;">
-                                    <div id="person-types-list">
-                                        </div>
-                                    <button type="button" class="btn btn-primary btn-sm mt-2" id="add-person-type">
-                                        <i class="isax isax-add-circle me-1"></i>Añadir Tipo de Persona
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="person-types-section" style="display: <?= !empty($tourMeta['enable_person_types']) ? 'block' : 'none' ?>;">
-                                <div id="person-types-list">
-                                    </div>
-                                <button type="button" class="btn btn-primary btn-sm mt-2" id="add-person-type">
-                                    <i class="isax isax-add-circle me-1"></i>Añadir Tipo de Persona
-                                </button>
-                            </div>
+                             
+                       <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio Base (USD)</label>
+                            <input type="number" name="price" class="form-control <?= (session('errors.price')) ? 'is-invalid' : '' ?>" step="0.01" value="<?= old('price', $tour['price'] ?? '') ?>">
+                            <?php if (session('errors.price')): ?><div class="invalid-feedback"><?= session('errors.price') ?></div><?php endif; ?>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio de Oferta (USD)</label>
+                            <input type="number" name="sale_price" class="form-control" step="0.01" value="<?= old('sale_price', $tour['sale_price'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <hr>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="enable_person_types" id="enable_person_types" <?= !empty($tourMeta['enable_person_types']) ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="enable_person_types">
+                            Habilitar precios por tipo de persona (adultos, niños, etc.)
+                        </label>
+                    </div>
 
-                        
+                    <div id="person-types-section" style="display: <?= !empty($tourMeta['enable_person_types']) ? 'block' : 'none' ?>;">
+                        <div id="person-types-list">
+                            </div>
+                        <button type="button" class="btn btn-primary btn-sm mt-2" id="add-person-type">
+                            <i class="isax isax-add-circle me-1"></i>Añadir Tipo de Persona
+                        </button>
+                    </div>
+
+                        </div>
                     </div>
 
                     <div class="card shadow-none" id="inclusiones">
@@ -226,6 +226,8 @@
                         <div class="card-body"><div id="faq-container"></div><button type="button" id="add-faq" class="btn btn-primary btn-sm mt-2"><i class="isax isax-add-circle me-1"></i>Añadir Pregunta</button></div>
                     </div>
                     
+                    <input type="hidden" name="person_types" id="person-types-json">
+
                     <div class="d-flex align-items-center justify-content-center mt-4">
                         <a href="<?= site_url('admin/tours') ?>" class="btn btn-light me-2">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Actualizar Tour</button>
@@ -265,84 +267,82 @@ function initMap() {
 <script>
 $(document).ready(function() {
 
-    // --- INICIALIZACIÓN DE DATOS Y QUILL EDITOR ---
+    // ====================================================================
+    // 1. INICIALIZACIÓN SEGURA DE DATOS Y QUILL EDITOR
+    // ====================================================================
     const tourData = {
-        include: <?= !empty($tour['include']) ? $tour['include'] : '[]' ?>,
-        exclude: <?= !empty($tour['exclude']) ? $tour['exclude'] : '[]' ?>,
-        itinerary: <?= !empty($tour['itinerary']) ? $tour['itinerary'] : '[]' ?>,
-        faqs: <?= !empty($tour['faqs']) ? $tour['faqs'] : '[]' ?>,
+        include: <?= json_encode(json_decode($tour['include'] ?? '[]')) ?>,
+        exclude: <?= json_encode(json_decode($tour['exclude'] ?? '[]')) ?>,
+        itinerary: <?= json_encode(json_decode($tour['itinerary'] ?? '[]')) ?>,
+        faqs: <?= json_encode(json_decode($tour['faqs'] ?? '[]')) ?>,
+        person_types: <?= json_encode(json_decode($tourMeta['person_types'] ?? '[]')) ?>,
         existing_gallery: <?= !empty($tour['gallery']) ? $tour['gallery'] : '[]' ?>
     };
 
     var quill = new Quill('#quill-editor', { theme: 'snow' });
-    quill.root.innerHTML = `<?= addslashes(old('content', $tour['content'] ?? '')) ?>`;
+    // Se decodifica el contenido en PHP y se re-codifica como una cadena JSON segura para JavaScript.
+    const quillContent = <?= json_encode(old('content', $tour['content'] ?? '')) ?>;
+    quill.root.innerHTML = quillContent;
 
-    // --- MANEJADOR PRINCIPAL DE ENVÍO (AJAX) ---
-    $('#main-tour-form').on('submit', function(event) {
-        event.preventDefault();
-        $("#quill-content-input").val(quill.root.innerHTML);
 
-        // Convertir Tipos de Persona a JSON antes de enviar
-    const personTypes = [];
-    $('#person-types-list .person-type-item').each(function() {
-        const type = $(this).find('input[name*="[type]"]').val();
-        const min = $(this).find('input[name*="[min]"]').val();
-        const max = $(this).find('input[name*="[max]"]').val();
-        const price = $(this).find('input[name*="[price]"]').val();
-        if (type && price) {
-            personTypes.push({
-                type: type,
-                min: min || 1,
-                max: max || 100,
-                price: parseFloat(price)
-            });
-        }
-    });
-    // Es necesario un campo oculto para enviar este JSON
-    if (!$('input[name="person_types"]').length) {
-        $(this).append('<input type="hidden" name="person_types">');
-    }
+
+// ====================================================================
+// 4. ENVÍO DEL FORMULARIO (CORREGIDO Y COMPLETADO)
+// ====================================================================
+$('#main-tour-form').on('submit', function(event) {
+    event.preventDefault();
+    $("#quill-content-input").val(quill.root.innerHTML);
+
+    // --- Recopilar datos dinámicos y convertirlos a JSON ---
+    const includes = Array.from($('#include-container .input-group')).map(el => ({ item: $(el).find('.include-text').val() })).filter(i => i.item);
+    const excludes = Array.from($('#exclude-container .input-group')).map(el => ({ item: $(el).find('.exclude-text').val() })).filter(i => i.item);
+    const itinerary = Array.from($('#itinerary-container .itinerary-item')).map(el => ({ title: $(el).find('.itinerary-title').val(), comment: $(el).find('.itinerary-comment').val() })).filter(i => i.title);
+    const faqs = Array.from($('#faq-container .faq-item')).map(el => ({ question: $(el).find('.faq-question').val(), answer: $(el).find('.faq-answer').val() })).filter(i => i.question);
+    const personTypes = Array.from($('#person-types-list .person-type-item')).map(el => ({ type: $(el).find('.person-type-text').val(), min: $(el).find('.person-type-min').val(), max: $(el).find('.person-type-max').val(), price: $(el).find('.person-type-price').val() })).filter(i => i.type && i.price);
+
+    // Asignar los JSON a los campos ocultos (asegúrate de que los campos ocultos existan en tu HTML)
+    $('input[name="include"]').val(JSON.stringify(includes));
+    $('input[name="exclude"]').val(JSON.stringify(excludes));
+    $('input[name="itinerary"]').val(JSON.stringify(itinerary));
+    $('input[name="faqs"]').val(JSON.stringify(faqs));
     $('input[name="person_types"]').val(JSON.stringify(personTypes));
-
-    // (Repetir este patrón para extra_price, discount_by_people, etc.)
-    // --- FIN DEL CÓDIGO AÑADIDO ---
-
+    
     var form = this;
     var formData = new FormData(form);
+    var submitButton = $(this).find('button[type="submit"]');
 
-        
-        var form = this;
-        var formData = new FormData(form);
-        var submitButton = $(this).find('button[type="submit"]');
+    submitButton.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+    $('.invalid-feedback').remove();
+    $('.is-invalid').removeClass('is-invalid');
 
-        submitButton.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-        $('.invalid-feedback').remove();
-        $('.is-invalid').removeClass('is-invalid');
-
-        $.ajax({
-            url: $(form).attr('action'),
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    alert(response.message || '¡Tour actualizado exitosamente!');
-                    location.reload(); // Recargamos para ver todos los cambios reflejados
-                } else {
-                    alert('Por favor, corrige los errores del formulario.');
-                    $.each(response.errors, function(field, message) {
-                        var input = $('[name="' + field + '"]');
-                        input.addClass('is-invalid');
-                        input.after('<div class="invalid-feedback d-block">' + message + '</div>');
-                    });
-                }
-            },
-            error: function() { alert('Ocurrió un error inesperado al actualizar.'); },
-            complete: function() { submitButton.prop('disabled', false).text('Actualizar Tour'); }
-        });
+    $.ajax({
+        url: $(form).attr('action'),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                alert(response.message || '¡Tour actualizado exitosamente!');
+                location.reload();
+            } else {
+                alert('Por favor, corrige los errores del formulario.');
+                $.each(response.errors, function(field, message) {
+                    var input = $('[name="' + field + '"]');
+                    input.addClass('is-invalid');
+                    input.after('<div class="invalid-feedback d-block">' + message + '</div>');
+                });
+            }
+        },
+        error: function() { alert('Ocurrió un error inesperado al actualizar.'); },
+        complete: function() { submitButton.prop('disabled', false).text('Actualizar Tour'); }
     });
+});
+
+
+
+
 
     // --- GESTIÓN DE GALERÍA (CON BORRADO AJAX MEJORADO) ---
     let galleryFiles = new DataTransfer();
@@ -461,8 +461,9 @@ $(document).ready(function() {
         });
     }
 
-    $(document).on('click', '.remove-item', function() { $(this).closest('.input-group, .itinerary-item, .faq-item').remove(); });
-
+    $(document).on('click', '.remove-item', function() {
+        $(this).closest('.input-group, .itinerary-item, .faq-item, .person-type-item').remove();
+    });
     // --- GESTIÓN DE TIPOS DE PERSONA ---
 
     // Lógica para mostrar/ocultar la sección
@@ -542,11 +543,6 @@ $(document).ready(function() {
             lastItem.find('input[name*="[price]"]').val(item.price);
         });
     }
-
-    // 4. Asegúrate de tener un manejador genérico para el botón de eliminar
-    $(document).on('click', '.remove-item', function() { 
-        $(this).closest('.person-type-item').remove(); 
-    });
 
 </script>
 <?= $this->endSection() ?>

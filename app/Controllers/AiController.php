@@ -26,7 +26,9 @@ class AiController extends Controller
             return $this->response->setJSON(['success' => false, 'message' => 'Error de configuración del servidor [API Key].'])->setStatusCode(500);
         }
 
-        $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . $apiKey;
+        // --- CORRECCIÓN #1: Asegúrate de que la URL usa v1 ---
+        $apiUrl = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=' . $apiKey;
+        
         $prompt = "Actúa como un experto en marketing de viajes. Basado en estas palabras clave: '{$keywords}', 
             genera una respuesta en formato JSON con las siguientes claves:
             - 'title': Un título atractivo y comercial para el tour.
@@ -37,11 +39,9 @@ class AiController extends Controller
 
             Asegúrate de que el JSON sea válido.";
             
+        // --- CORRECCIÓN #2: Simplifica el payload ---
         $payload = [
-            'contents' => [['parts' => [['text' => $prompt]]]],
-            'generationConfig' => [
-                'response_mime_type' => 'application/json',
-            ]
+            'contents' => [['parts' => [['text' => $prompt]]]]
         ];
 
         try {
@@ -61,15 +61,10 @@ class AiController extends Controller
             }
 
             if (isset($body['candidates'][0]['content']['parts'][0]['text'])) {
-                // Obtenemos el JSON directamente de la API
                 $generatedJson = $body['candidates'][0]['content']['parts'][0]['text'];
-                // Usamos la variable correcta para decodificar
                 $contentData = json_decode($generatedJson, true);
 
-                // Verificamos que el JSON se decodificó correctamente
                 if (json_last_error() === JSON_ERROR_NONE && isset($contentData['title'])) {
-
-                    // --- INICIO: Lógica para garantizar el límite de 160 caracteres ---
                     $maxLength = 160;
                     if (isset($contentData['seo_description'])) {
                         $description = $contentData['seo_description'];
@@ -83,18 +78,14 @@ class AiController extends Controller
                             }
                         }
                     }
-                    // --- FIN: Lógica para garantizar el límite ---
-
                     return $this->response->setJSON(['success' => true, 'data' => $contentData]);
                 }
             }
             
-            // Si algo falla en la estructura de la respuesta
             log_message('error', 'Respuesta inesperada o JSON inválido de la API de IA: ' . $apiResponse->getBody());
             return $this->response->setJSON(['success' => false, 'message' => 'La IA no pudo generar el contenido con un formato válido.'])->setStatusCode(500);
 
         } catch (\Exception $e) {
-            // Captura errores de conexión o errores de PHP como el que tuviste
             log_message('error', 'Excepción en AiController: ' . $e->getMessage());
             return $this->response->setJSON(['success' => false, 'message' => 'Error de conexión con el servicio de IA. Verifica los logs.'])->setStatusCode(500);
         }

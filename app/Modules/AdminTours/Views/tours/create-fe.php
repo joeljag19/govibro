@@ -146,6 +146,22 @@
                                     <label class="form-label">Precio de Oferta (USD)</label>
                                     <input type="number" name="sale_price" class="form-control" step="0.01" value="<?= old('sale_price') ?>">
                                 </div>
+                                <hr>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="enable_person_types" id="enable_person_types" <?= old('enable_person_types') ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="enable_person_types">
+                                        Habilitar precios por tipo de persona (adultos, niños, etc.)
+                                    </label>
+                                </div>
+
+                                <div id="person-types-section" style="display: <?= old('enable_person_types') ? 'block' : 'none' ?>;">
+                                    <div id="person-types-list">
+                                        </div>
+                                    <button type="button" class="btn btn-primary btn-sm mt-2" id="add-person-type">
+                                        <i class="isax isax-add-circle me-1"></i>Añadir Tipo de Persona
+                                    </button>
+                                </div>
+                                <input type="hidden" name="person_types" id="person-types-json">
                             </div>
                         </div>
                     </div>

@@ -58,7 +58,7 @@
                                                             <td><?= esc($tour['owner_name'] ?? 'N/A') ?></td>
                                                         <?php endif; ?>
                                                         <td><?= esc($tour['category_name'] ?? 'N/A') ?></td>
-                                                        <td>$<?= number_format($tour['price'], 2) ?></td>
+                                                        <td>$<?= number_format($tour['price_base'], 2) ?></td>
                                                         <td><span class="badge bg-<?= $tour['status'] === 'published' ? 'success' : 'secondary' ?>"><?= esc(ucfirst($tour['status'])) ?></span></td>
                                                         <td><span class="badge bg-<?= $tour['approval_status'] === 'approved' ? 'success' : ($tour['approval_status'] === 'pending' ? 'warning' : 'danger') ?>"><?= esc(ucfirst($tour['approval_status'])) ?></span></td>
                                                         <td>
