@@ -117,7 +117,8 @@ public function createTourWithDetails(array $postData, array $files, array $user
             'short_desc'     => $postData['short_desc'] ?? null,
             'content'        => $postData['content'] ?? null,
             'video'          => $postData['video'] ?? null,
-            'duration'       => $postData['duration'] ?? null,
+            'duration_value' => $postData['duration_value'] ?? null,
+            'duration_unit'  => $postData['duration_unit'] ?? 'hour',
             
             // Campos de moneda
             'owner_price'    => $ownerPrice,
@@ -210,7 +211,8 @@ public function updateTourWithDetails($tourId, array $postData, array $files, ar
             'short_desc'    => $postData['short_desc'] ?? null,
             'content'       => $postData['content'] ?? null,
             'video'         => $postData['video'] ?? null,
-            'duration'      => $postData['duration'] ?? null,
+            'duration_value' => $postData['duration_value'] ?? null,
+            'duration_unit'  => $postData['duration_unit'] ?? 'hour',
             'address'       => $postData['address'] ?? null,
             'map_lat'       => $postData['map_lat'] ?? null,
             'map_lng'       => $postData['map_lng'] ?? null,

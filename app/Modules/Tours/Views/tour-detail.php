@@ -222,11 +222,17 @@ $all_images = array_merge($all_images, $gallery);
                     <div class="card-body">
                         <h5 class="d-flex align-items-center fs-18 mb-3"><span class="avatar avatar-md rounded-circle bg-primary me-2"><i class="isax isax-signpost5"></i></span>Detalles del Tour</h5>
                         <div>
-                            <div class="d-flex align-items-center justify-content-between details-info">
-                                <h6 class="fw-medium">Duración</h6>
-                                <p class="flex-fill"><?= esc($tour['duration']) ?> horas</p>
-                            </div>
-                             <!-- (Puedes añadir más detalles aquí en el futuro) -->
+                        <div class="d-flex align-items-center justify-content-between details-info">
+                            <h6 class="fw-medium">Duración</h6>
+                            <?php 
+                                $unit = $tour['duration_unit'] ?? 'hour';
+                                $plural = ($tour['duration_value'] ?? 1) > 1 ? 's' : '';
+                                if ($unit === 'hour') $unit_text = 'Hora';
+                                elseif ($unit === 'day') $unit_text = 'Día';
+                                elseif ($unit === 'night') $unit_text = 'Noche';
+                            ?>
+                            <p class="flex-fill"><?= esc($tour['duration_value']) ?> <?= esc($unit_text . $plural) ?></p>
+                        </div>
                         </div>
                     </div>
                 </div>

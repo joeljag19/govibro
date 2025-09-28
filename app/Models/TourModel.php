@@ -10,7 +10,7 @@ class TourModel extends Model
     protected $allowedFields = [
         'title', 'slug', 'content', 'short_desc', 'image_id', 'banner_image_id', 'gallery',
         'video', 'category_id', 'location_id', 'address', 'map_lat', 'map_lng', 'map_zoom',
-        'price_base','owner_price','owner_currency', 'sale_price', 'duration', 'min_people', 'max_people', 'faqs', 'status',
+        'price_base','owner_price','owner_currency', 'sale_price', 'duration_value','duration_unit', 'min_people', 'max_people', 'faqs', 'status',
         'publish_date', 'is_featured', 'include', 'exclude', 'itinerary', 'review_score',
         'commission_rate', 'created_by', 'updated_by', 'lang', 'origin_id', 'owner_id',
         'approval_status', 'default_state', 'enable_fixed_date', 'start_date', 'end_date',

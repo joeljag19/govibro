@@ -96,7 +96,22 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3"><label class="form-label">Video (URL YouTube)</label><input type="text" name="video" class="form-control" value="<?= old('video', $tour['video'] ?? '') ?>"></div>
-                                <div class="col-md-6 mb-3"><label class="form-label">Duración</label><input type="text" name="duration" class="form-control" placeholder="Ej. 8 horas" value="<?= old('duration', $tour['duration'] ?? '') ?>"></div>
+                               
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Video (URL YouTube)</label>
+                                    <input type="text" name="video" class="form-control" value="<?= old('video', $tour['video'] ?? '') ?>">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Duración</label>
+                                    <div class="input-group">
+                                        <input type="number" name="duration_value" class="form-control" placeholder="Ej. 8" value="<?= old('duration_value', $tour['duration_value'] ?? '') ?>">
+                                        <select name="duration_unit" class="form-select" style="flex: 0.5;">
+                                            <option value="hour" <?= ($tour['duration_unit'] ?? '') == 'hour' ? 'selected' : '' ?>>Horas</option>
+                                            <option value="day" <?= ($tour['duration_unit'] ?? '') == 'day' ? 'selected' : '' ?>>Días</option>
+                                            <option value="night" <?= ($tour['duration_unit'] ?? '') == 'night' ? 'selected' : '' ?>>Noches</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3"><label class="form-label">Estado</label><select name="status" class="select"><option value="draft" <?= (old('status', $tour['status'] ?? '') == 'draft') ? 'selected' : '' ?>>Borrador</option><option value="published" <?= (old('status', $tour['status'] ?? '') == 'published') ? 'selected' : '' ?>>Publicado</option></select></div>
@@ -113,7 +128,24 @@
                                 <?php if (session('errors.price')): ?><div class="invalid-feedback"><?= session('errors.price') ?></div><?php endif; ?></div>
                                 <div class="col-md-6 mb-3"><label class="form-label">Precio de Oferta (USD)</label><input type="number" name="sale_price" class="form-control" step="0.01" value="<?= old('sale_price', $tour['sale_price'] ?? '') ?>"></div>
                             </div>
+
+                             <hr>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="enable_person_types" id="enable_person_types" <?= !empty($tourMeta['enable_person_types']) ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="enable_person_types">Habilitar precios por tipo de persona (adultos, niños, etc.)</label>
+                            </div>
+
+                            <div id="person-types-section" style="display: <?= !empty($tourMeta['enable_person_types']) ? 'block' : 'none' ?>;">
+                                <div id="person-types-list">
+                                    </div>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" id="add-person-type">
+                                    <i class="isax isax-add-circle me-1"></i>Añadir Tipo de Persona
+                                </button>
+                            </div>
                         </div>
+
+                        
                     </div>
 
                     <div class="card shadow-none" id="inclusiones">
@@ -395,5 +427,45 @@ $(document).ready(function() {
 
     $(document).on('click', '.remove-item', function() { $(this).closest('.input-group, .itinerary-item, .faq-item').remove(); });
 });
+
+
+    // 1. Lógica para mostrar/ocultar la sección de tipos de persona
+    $('#enable_person_types').change(function() {
+        $('#person-types-section').toggle(this.checked);
+    }).change(); // Ejecutar al cargar para establecer el estado inicial
+
+    // 2. Lógica para añadir un nuevo campo de tipo de persona
+    let personTypeCounter = 0;
+    $('#add-person-type').click(function() {
+        const index = personTypeCounter++;
+        const html = `
+            <div class="row mb-2 person-type-item">
+                <div class="col-md-3"><input type="text" name="person_types[${index}][type]" class="form-control" placeholder="Ej: Adulto"></div>
+                <div class="col-md-2"><input type="number" name="person_types[${index}][min]" class="form-control" placeholder="Mín."></div>
+                <div class="col-md-2"><input type="number" name="person_types[${index}][max]" class="form-control" placeholder="Máx."></div>
+                <div class="col-md-3"><input type="number" name="person_types[${index}][price]" class="form-control" placeholder="Precio" step="0.01"></div>
+                <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div>
+            </div>`;
+        $('#person-types-list').append(html);
+    });
+
+    // 3. Lógica para cargar los datos existentes al abrir la página
+    const personTypesData = <?= !empty($tourMeta['person_types']) ? $tourMeta['person_types'] : '[]' ?>;
+    if (Array.isArray(personTypesData)) {
+        personTypesData.forEach(item => {
+            $('#add-person-type').click();
+            const lastItem = $('#person-types-list .person-type-item:last');
+            lastItem.find('input[name*="[type]"]').val(item.type);
+            lastItem.find('input[name*="[min]"]').val(item.min);
+            lastItem.find('input[name*="[max]"]').val(item.max);
+            lastItem.find('input[name*="[price]"]').val(item.price);
+        });
+    }
+
+    // 4. Asegúrate de tener un manejador genérico para el botón de eliminar
+    $(document).on('click', '.remove-item', function() { 
+        $(this).closest('.person-type-item').remove(); 
+    });
+
 </script>
 <?= $this->endSection() ?>

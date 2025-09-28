@@ -97,10 +97,17 @@
                 <label class="form-label">Video (URL YouTube)</label>
                 <input type="text" name="video" class="form-control" value="<?= old('video') ?>">
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Duración</label>
-                <input type="text" name="duration" class="form-control" placeholder="Ej. 8 horas" value="<?= old('duration') ?>">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Duración</label>
+            <div class="input-group">
+                <input type="number" name="duration_value" class="form-control" placeholder="Ej. 8" value="<?= old('duration_value') ?>">
+                <select name="duration_unit" class="form-select" style="flex: 0.5;">
+                    <option value="hour">Horas</option>
+                    <option value="day">Días</option>
+                    <option value="night">Noches</option>
+                </select>
             </div>
+        </div>
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
