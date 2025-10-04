@@ -287,17 +287,17 @@ $(document).ready(function() {
     // ====================================================================
     // 1. INICIALIZACIÓN SEGURA DE DATOS Y QUILL EDITOR
     // ====================================================================
-const tourData = {
-    include:            <?= $tour['include'] ?? '[]' ?>,
-    exclude:            <?= $tour['exclude'] ?? '[]' ?>,
-    itinerary:          <?= $tour['itinerary'] ?? '[]' ?>,
-    faqs:               <?= $tour['faqs'] ?? '[]' ?>,
-    person_types:       <?= $tourMeta['person_types'] ?? '[]' ?>,
-    extra_price:        <?= $tourMeta['extra_price'] ?? '[]' ?>,
-    service_fees:       <?= $tourMeta['service_fees'] ?? '[]' ?>,
-    discount_by_people: <?= $tourMeta['discount_by_people'] ?? '[]' ?>,
-    existing_gallery:   <?= $tour['gallery'] ?? '[]' ?>
-};
+    const tourData = {
+        include:            <?= $tour['include'] ?? '[]' ?>,
+        exclude:            <?= $tour['exclude'] ?? '[]' ?>,
+        itinerary:          <?= $tour['itinerary'] ?? '[]' ?>,
+        faqs:               <?= $tour['faqs'] ?? '[]' ?>,
+        person_types:       <?= $tourMeta['person_types'] ?? '[]' ?>,
+        extra_price:        <?= $tourMeta['extra_price'] ?? '[]' ?>,
+        service_fees:       <?= $tourMeta['service_fees'] ?? '[]' ?>,
+        discount_by_people: <?= $tourMeta['discount_by_people'] ?? '[]' ?>,
+        existing_gallery:   <?= $tour['gallery'] ?? '[]' ?>
+    };
 
     var quill = new Quill('#quill-editor', { theme: 'snow' });
     const quillContent = <?= json_encode(old('content', $tour['content'] ?? '')) ?>;
