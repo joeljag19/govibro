@@ -4,7 +4,7 @@ namespace App\Modules\AdminTours\Models;
 use App\Models\TourModel as BaseTourModel;
 use App\Models\TourTranslationsModel;
 use App\Services\CurrencyService;  //Servicio de cambio de moneda
-use App\Modules\AdminTours\Models\OwnerModel; //Modelo de propietarios
+use App\Modules\OwnerPanel\Models\OwnerModel; //Modelo de propietarios
 
 
 class TourAdminModel extends BaseTourModel
@@ -65,7 +65,7 @@ class TourAdminModel extends BaseTourModel
 public function createTourWithDetails(array $postData, array $files, array $user): ?int
 {
     // Cargar helpers necesarios. (Asegúrate de que 'text' esté en app/Config/Autoload.php)
-    helper(['ImageHelper', 'text']);
+    helper(['Imagenredimension', 'text']);
 
     $this->db->transStart();
 
@@ -149,6 +149,24 @@ public function createTourWithDetails(array $postData, array $files, array $user
         if (!$tourId) {
             throw new \Exception('Error al crear el tour principal en la base de datos.');
         }
+
+        // ... después de la validación if (!$tourId) { ... }
+
+        // 5. PREPARAR Y GUARDAR DATOS EN tour_meta
+        $tourMetaModel = new \App\Modules\AdminTours\Models\TourMetaAdminModel();
+        $metaData = [
+            'tour_id'             => $tourId,
+            'enable_person_types' => !empty($postData['enable_person_types']) ? 1 : 0,
+            'person_types'        => json_encode($postData['person_types'] ?? []),
+            
+            // Aquí hacemos lo mismo para los otros campos que también son arrays
+            'extra_price'         => json_encode($postData['extra_price'] ?? []),
+            'service_fees'        => json_encode($postData['service_fees'] ?? []),
+            'discount_by_people'  => json_encode($postData['discount_by_people'] ?? [])
+        ];
+        $tourMetaModel->insert($metaData);
+        // --- FIN: CÓDIGO A AÑADIR ---
+
         
         $this->db->transComplete();
         
@@ -230,6 +248,30 @@ public function updateTourWithDetails($tourId, array $postData, array $files, ar
         
         // --- ACTUALIZAR BASE DE DATOS Y FINALIZAR ---
         $this->update($tourId, $tourData);
+
+        // 6. ACTUALIZAR O CREAR DATOS EN tour_meta
+        $tourMetaModel = new \App\Modules\AdminTours\Models\TourMetaAdminModel();
+        $metaData = [
+            'tour_id'             => $tourId,
+            'enable_person_types' => !empty($postData['enable_person_types']) ? 1 : 0,
+            'person_types'        => json_encode($postData['person_types'] ?? []),
+            
+            // Aquí hacemos lo mismo para los otros campos que también son arrays
+            'extra_price'         => json_encode($postData['extra_price'] ?? []),
+            'service_fees'        => json_encode($postData['service_fees'] ?? []),
+            'discount_by_people'  => json_encode($postData['discount_by_people'] ?? [])
+        ];
+
+        // Buscar si ya existe un registro meta para este tour
+        $existingMeta = $tourMetaModel->where('tour_id', $tourId)->first();
+
+        if ($existingMeta) {
+            // Si existe, lo actualizamos
+            $tourMetaModel->update($existingMeta['id'], $metaData);
+        } else {
+            // Si no existe (caso raro para un tour que se está actualizando), lo insertamos
+            $tourMetaModel->insert($metaData);
+        }
         
         $this->db->transComplete();
 

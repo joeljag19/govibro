@@ -123,36 +123,52 @@
                     <div class="card shadow-none" id="pricing">
                         <div class="card-header"><h5 class="fs-18">Precios</h5></div>
                         <div class="card-body">
-                             
-                       <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Precio Base (USD)</label>
-                            <input type="number" name="price" class="form-control <?= (session('errors.price')) ? 'is-invalid' : '' ?>" step="0.01" value="<?= old('price', $tour['price'] ?? '') ?>">
-                            <?php if (session('errors.price')): ?><div class="invalid-feedback"><?= session('errors.price') ?></div><?php endif; ?>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Precio de Oferta (USD)</label>
-                            <input type="number" name="sale_price" class="form-control" step="0.01" value="<?= old('sale_price', $tour['sale_price'] ?? '') ?>">
-                        </div>
-                    </div>
-                    <hr>
-                    
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="enable_person_types" id="enable_person_types" <?= !empty($tourMeta['enable_person_types']) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="enable_person_types">
-                            Habilitar precios por tipo de persona (adultos, niños, etc.)
-                        </label>
-                    </div>
-
-                    <div id="person-types-section" style="display: <?= !empty($tourMeta['enable_person_types']) ? 'block' : 'none' ?>;">
-                        <div id="person-types-list">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Precio Base (USD)</label>
+                                    <input type="number" name="price" class="form-control" step="0.01" value="<?= old('price', $tour['price'] ?? '') ?>">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Precio de Oferta (USD)</label>
+                                    <input type="number" name="sale_price" class="form-control" step="0.01" value="<?= old('sale_price', $tour['sale_price'] ?? '') ?>">
+                                </div>
                             </div>
-                        <button type="button" class="btn btn-primary btn-sm mt-2" id="add-person-type">
-                            <i class="isax isax-add-circle me-1"></i>Añadir Tipo de Persona
-                        </button>
-                    </div>
 
-                        </div>
+                            <hr>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="enable_person_types" id="enable_person_types" <?= !empty($tourMeta['enable_person_types']) ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="enable_person_types">Habilitar precios por tipo de persona (adultos, niños, etc.)</label>
+                            </div>
+                            <div id="person-types-section" style="display: <?= !empty($tourMeta['enable_person_types']) ? 'block' : 'none' ?>;">
+                                <div id="person-types-list"></div>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" id="add-person-type"><i class="isax isax-add-circle me-1"></i>Añadir Tipo de Persona</button>
+                            </div>
+
+                            <hr>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="enable_extra_price" id="enable_extra_price" <?= !empty($tourMeta['enable_extra_price']) ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="enable_extra_price">Habilitar precios extra (servicios opcionales)</label>
+                            </div>
+                            <div id="extra-price-section" style="display: <?= !empty($tourMeta['enable_extra_price']) ? 'block' : 'none' ?>;">
+                                <div id="extra-price-list"></div>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" id="add-extra-price"><i class="isax isax-add-circle me-1"></i>Añadir Precio Extra</button>
+                            </div>
+
+                            <hr>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="enable_service_fee" id="enable_service_fee" <?= !empty($tourMeta['enable_service_fee']) ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="enable_service_fee">Habilitar tarifas de servicio (impuestos, etc.)</label>
+                            </div>
+                            <div id="service-fee-section" style="display: <?= !empty($tourMeta['enable_service_fee']) ? 'block' : 'none' ?>;">
+                                <div id="service-fee-list"></div>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" id="add-service-fee"><i class="isax isax-add-circle me-1"></i>Añadir Tarifa</button>
+                            </div>
+
+                            <hr>
+                            <h6>Descuentos generales (para tours con precio base)</h6>
+                            <div id="discount-by-people-list"></div>
+                            <button type="button" class="btn btn-primary btn-sm mt-2" id="add-discount-by-people"><i class="isax isax-add-circle me-1"></i>Añadir Rango de Descuento</button>
+                        </div>   
                     </div>
 
                     <div class="card shadow-none" id="inclusiones">
@@ -171,6 +187,8 @@
                             <div id="itinerary-container"></div>
                             <button type="button" id="add-itinerary" class="btn btn-primary btn-sm mt-2"><i class="isax isax-add-circle me-1"></i>Añadir Parada</button>
                         </div>
+
+
                     </div>
                     
 <div class="card shadow-none" id="gallery">
@@ -226,7 +244,6 @@
                         <div class="card-body"><div id="faq-container"></div><button type="button" id="add-faq" class="btn btn-primary btn-sm mt-2"><i class="isax isax-add-circle me-1"></i>Añadir Pregunta</button></div>
                     </div>
                     
-                    <input type="hidden" name="person_types" id="person-types-json">
 
                     <div class="d-flex align-items-center justify-content-center mt-4">
                         <a href="<?= site_url('admin/tours') ?>" class="btn btn-light me-2">Cancelar</a>
@@ -270,105 +287,157 @@ $(document).ready(function() {
     // ====================================================================
     // 1. INICIALIZACIÓN SEGURA DE DATOS Y QUILL EDITOR
     // ====================================================================
-    const tourData = {
-        include: <?= json_encode(json_decode($tour['include'] ?? '[]')) ?>,
-        exclude: <?= json_encode(json_decode($tour['exclude'] ?? '[]')) ?>,
-        itinerary: <?= json_encode(json_decode($tour['itinerary'] ?? '[]')) ?>,
-        faqs: <?= json_encode(json_decode($tour['faqs'] ?? '[]')) ?>,
-        person_types: <?= json_encode(json_decode($tourMeta['person_types'] ?? '[]')) ?>,
-        existing_gallery: <?= !empty($tour['gallery']) ? $tour['gallery'] : '[]' ?>
-    };
+const tourData = {
+    include:            <?= $tour['include'] ?? '[]' ?>,
+    exclude:            <?= $tour['exclude'] ?? '[]' ?>,
+    itinerary:          <?= $tour['itinerary'] ?? '[]' ?>,
+    faqs:               <?= $tour['faqs'] ?? '[]' ?>,
+    person_types:       <?= $tourMeta['person_types'] ?? '[]' ?>,
+    extra_price:        <?= $tourMeta['extra_price'] ?? '[]' ?>,
+    service_fees:       <?= $tourMeta['service_fees'] ?? '[]' ?>,
+    discount_by_people: <?= $tourMeta['discount_by_people'] ?? '[]' ?>,
+    existing_gallery:   <?= $tour['gallery'] ?? '[]' ?>
+};
 
     var quill = new Quill('#quill-editor', { theme: 'snow' });
-    // Se decodifica el contenido en PHP y se re-codifica como una cadena JSON segura para JavaScript.
     const quillContent = <?= json_encode(old('content', $tour['content'] ?? '')) ?>;
     quill.root.innerHTML = quillContent;
 
+    // --- Lógica para Precios Extra ---
+    $('#enable_extra_price').change(function() { 
+        $('#extra-price-section').toggle(this.checked); 
+    }).change();
 
-
-// ====================================================================
-// 4. ENVÍO DEL FORMULARIO (CORREGIDO Y COMPLETADO)
-// ====================================================================
-$('#main-tour-form').on('submit', function(event) {
-    event.preventDefault();
-    $("#quill-content-input").val(quill.root.innerHTML);
-
-    // --- Recopilar datos dinámicos y convertirlos a JSON ---
-    const includes = Array.from($('#include-container .input-group')).map(el => ({ item: $(el).find('.include-text').val() })).filter(i => i.item);
-    const excludes = Array.from($('#exclude-container .input-group')).map(el => ({ item: $(el).find('.exclude-text').val() })).filter(i => i.item);
-    const itinerary = Array.from($('#itinerary-container .itinerary-item')).map(el => ({ title: $(el).find('.itinerary-title').val(), comment: $(el).find('.itinerary-comment').val() })).filter(i => i.title);
-    const faqs = Array.from($('#faq-container .faq-item')).map(el => ({ question: $(el).find('.faq-question').val(), answer: $(el).find('.faq-answer').val() })).filter(i => i.question);
-    const personTypes = Array.from($('#person-types-list .person-type-item')).map(el => ({ type: $(el).find('.person-type-text').val(), min: $(el).find('.person-type-min').val(), max: $(el).find('.person-type-max').val(), price: $(el).find('.person-type-price').val() })).filter(i => i.type && i.price);
-
-    // Asignar los JSON a los campos ocultos (asegúrate de que los campos ocultos existan en tu HTML)
-    $('input[name="include"]').val(JSON.stringify(includes));
-    $('input[name="exclude"]').val(JSON.stringify(excludes));
-    $('input[name="itinerary"]').val(JSON.stringify(itinerary));
-    $('input[name="faqs"]').val(JSON.stringify(faqs));
-    $('input[name="person_types"]').val(JSON.stringify(personTypes));
-    
-    var form = this;
-    var formData = new FormData(form);
-    var submitButton = $(this).find('button[type="submit"]');
-
-    submitButton.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-    $('.invalid-feedback').remove();
-    $('.is-invalid').removeClass('is-invalid');
-
-    $.ajax({
-        url: $(form).attr('action'),
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                alert(response.message || '¡Tour actualizado exitosamente!');
-                location.reload();
-            } else {
-                alert('Por favor, corrige los errores del formulario.');
-                $.each(response.errors, function(field, message) {
-                    var input = $('[name="' + field + '"]');
-                    input.addClass('is-invalid');
-                    input.after('<div class="invalid-feedback d-block">' + message + '</div>');
-                });
-            }
-        },
-        error: function() { alert('Ocurrió un error inesperado al actualizar.'); },
-        complete: function() { submitButton.prop('disabled', false).text('Actualizar Tour'); }
+    let extraPriceCounter = 0;
+    $('#add-extra-price').on('click', function() {
+        const html = `<div class="row align-items-center extra-price-item mb-2">
+            <div class="col-md-4"><input type="text" class="form-control extra-price-name" placeholder="Nombre (ej: Guía privado)"></div>
+            <div class="col-md-3"><input type="number" class="form-control extra-price-amount" placeholder="Precio" step="0.01"></div>
+            <div class="col-md-3">
+                <select class="form-select extra-price-type">
+                    <option value="once">Una sola vez</option>
+                    <option value="per_person">Por persona</option>
+                </select>
+            </div>
+            <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div>
+        </div>`;
+        $('#extra-price-list').append(html);
     });
-});
 
+    if (tourData.extra_price && Array.isArray(tourData.extra_price)) {
+        tourData.extra_price.forEach(item => {
+            $('#add-extra-price').click();
+            const l = $('#extra-price-list .extra-price-item:last');
+            l.find('.extra-price-name').val(item.name);
+            l.find('.extra-price-amount').val(item.amount);
+            l.find('.extra-price-type').val(item.type);
+        });
+    }
 
+    // --- Lógica para Tarifas de Servicio ---
+    $('#enable_service_fee').change(function() { 
+        $('#service-fee-section').toggle(this.checked); 
+    }).change();
 
+    let serviceFeeCounter = 0;
+    $('#add-service-fee').on('click', function() {
+        const html = `<div class="row align-items-center service-fee-item mb-2">
+            <div class="col-md-4"><input type="text" class="form-control service-fee-name" placeholder="Nombre (ej: Impuestos)"></div>
+            <div class="col-md-4"><input type="number" class="form-control service-fee-amount" placeholder="Valor" step="0.01"></div>
+            <div class="col-md-2">
+                <select class="form-select service-fee-type">
+                    <option value="fixed">Fijo</option>
+                    <option value="percentage">Porcentaje</option>
+                </select>
+            </div>
+            <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div>
+        </div>`;
+        $('#service-fee-list').append(html);
+    });
 
+    if (tourData.service_fees && Array.isArray(tourData.service_fees)) {
+        tourData.service_fees.forEach(item => {
+            $('#add-service-fee').click();
+            const l = $('#service-fee-list .service-fee-item:last');
+            l.find('.service-fee-name').val(item.name);
+            l.find('.service-fee-amount').val(item.amount);
+            l.find('.service-fee-type').val(item.type);
+        });
+    }
 
-    // --- GESTIÓN DE GALERÍA (CON BORRADO AJAX MEJORADO) ---
+    // --- Lógica para Descuento por Precio Base ---
+    let discountCounter = 0;
+    $('#add-discount-by-people').on('click', function() {
+        const html = `<div class="row align-items-center discount-item mb-2">
+            <div class="col-md-4"><input type="number" class="form-control discount-from" placeholder="A partir de (ej: 3 personas)"></div>
+            <div class="col-md-4"><input type="number" class="form-control discount-amount" placeholder="Valor del descuento" step="0.01"></div>
+            <div class="col-md-2">
+                <select class="form-select discount-type">
+                    <option value="fixed">Fijo</option>
+                    <option value="percentage">Porcentaje</option>
+                </select>
+            </div>
+            <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div>
+        </div>`;
+        $('#discount-by-people-list').append(html);
+    });
+
+    // --- Lógica para el botón de descuento ANIDADO (CORREGIDA) ---
+    $(document).on('click', '.add-nested-discount-btn', function() {
+        const parentIndex = $(this).data('index');
+        
+        // Contamos cuántos descuentos ya existen para este tipo de persona
+        const discountIndex = $(this).closest('.person-type-item').find('.discount-item-nested').length;
+
+        const html = `
+        <div class="row align-items-center discount-item-nested mb-2 ms-1">
+            <div class="col-md-4">
+                <input type="number" name="person_types[${parentIndex}][discounts][${discountIndex}][from]" class="form-control form-control-sm" placeholder="A partir de (ej: 4)">
+            </div>
+            <div class="col-md-4">
+                <input type="number" name="person_types[${parentIndex}][discounts][${discountIndex}][amount]" class="form-control form-control-sm" placeholder="Valor descuento" step="0.01">
+            </div>
+            <div class="col-md-3">
+                <select name="person_types[${parentIndex}][discounts][${discountIndex}][type]" class="form-select form-select-sm">
+                    <option value="percentage">%</option>
+                    <option value="fixed">Fijo</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-danger btn-sm remove-nested-discount">X</button>
+            </div>
+        </div>`;
+        $(this).closest('.person-type-item').find('.nested-discounts-list').append(html);
+    });
+
+    if (tourData.discount_by_people && Array.isArray(tourData.discount_by_people)) {
+        tourData.discount_by_people.forEach(item => {
+            $('#add-discount-by-people').click();
+            const l = $('#discount-by-people-list .discount-item:last');
+            l.find('.discount-from').val(item.from);
+            l.find('.discount-amount').val(item.amount);
+            l.find('.discount-type').val(item.type);
+        });
+    }
+
+    // ====================================================================
+    // 2. GESTIÓN DE GALERÍA
+    // ====================================================================
     let galleryFiles = new DataTransfer();
-    updatePreviews(); // Cargar la galería existente al iniciar
+    updatePreviews();
 
     function updatePreviews() {
         const previewsContainer = $('#gallery_previews').html('');
-        // Mostrar imágenes existentes
         if (tourData.existing_gallery && Array.isArray(tourData.existing_gallery)) {
             tourData.existing_gallery.forEach((imageName) => {
                 const imageUrl = `<?= base_url('uploads/tours/') ?>${imageName}`;
-                const previewHtml = `<div class="gallery-upload-img me-2 position-relative">
-                                         <img src="${imageUrl}" alt="${imageName}">
-                                         <span class="trash-icon d-flex align-items-center justify-content-center text-danger delete-image-btn" data-tour-id="<?= esc($tour['id']) ?>" data-image-name="${encodeURIComponent(imageName)}" style="cursor: pointer;">
-                                             <i class="isax isax-trash"></i>
-                                         </span>
-                                     </div>`;
-                previewsContainer.append(previewHtml);
+                previewsContainer.append(`<div class="gallery-upload-img me-2 position-relative"><img src="${imageUrl}" alt="${imageName}"><span class="trash-icon d-flex align-items-center justify-content-center text-danger delete-image-btn" data-tour-id="<?= esc($tour['id']) ?>" data-image-name="${encodeURIComponent(imageName)}" style="cursor: pointer;"><i class="isax isax-trash"></i></span></div>`);
             });
         }
-        // Previsualizar imágenes nuevas
         Array.from(galleryFiles.files).forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const previewHtml = `<div class="gallery-upload-img me-2 position-relative new-image"><img src="${e.target.result}" alt="${file.name}"><span class="trash-icon d-flex align-items-center justify-content-center text-danger gallery-trash-new" data-index="${index}"><i class="isax isax-trash"></i></span></div>`;
-                previewsContainer.append(previewHtml);
+                previewsContainer.append(`<div class="gallery-upload-img me-2 position-relative new-image"><img src="${e.target.result}" alt="${file.name}"><span class="trash-icon d-flex align-items-center justify-content-center text-danger gallery-trash-new" data-index="${index}"><i class="isax isax-trash"></i></span></div>`);
             }
             reader.readAsDataURL(file);
         });
@@ -376,15 +445,12 @@ $('#main-tour-form').on('submit', function(event) {
 
     $('#gallery_files').on('change', function(event) {
         for (let file of event.target.files) {
-            if (![...galleryFiles.files].find(f => f.name === file.name && f.size === file.size)) {
-                galleryFiles.items.add(file);
-            }
+            if (![...galleryFiles.files].find(f => f.name === file.name && f.size === file.size)) { galleryFiles.items.add(file); }
         }
         updatePreviews();
         document.getElementById('gallery_files').files = galleryFiles.files;
     });
 
-    // Borrar imágenes NUEVAS (aún no guardadas)
     $(document).on('click', '.gallery-trash-new', function() {
         const indexToRemove = $(this).data('index');
         const newFiles = new DataTransfer();
@@ -396,153 +462,164 @@ $('#main-tour-form').on('submit', function(event) {
         document.getElementById('gallery_files').files = galleryFiles.files;
     });
 
-    // Borrar imágenes EXISTENTES (guardadas) vía AJAX
     $(document).on('click', '.delete-image-btn', function() {
         if (!confirm('¿Estás seguro de que quieres eliminar esta imagen permanentemente?')) return;
-        
         const tourId = $(this).data('tour-id');
         const imageName = $(this).data('image-name');
         const url = `<?= site_url('admin/tours/delete-image/') ?>${tourId}/${imageName}`;
         const imageElement = $(this).closest('.gallery-upload-img');
-
         fetch(url, {
             method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': $('input[name=csrf_test_name]').val()
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': $('input[name=csrf_test_name]').val() }
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Eliminar la imagen de la vista sin recargar la página
                 imageElement.fadeOut(300, function() { $(this).remove(); });
-                // Actualizar el array de datos local para consistencia
                 tourData.existing_gallery = tourData.existing_gallery.filter(img => img !== decodeURIComponent(imageName));
-            } else {
-                alert(data.message || 'Error al eliminar la imagen.');
-            }
+            } else { alert(data.message || 'Error al eliminar la imagen.'); }
         })
         .catch(error => { console.error('Error:', error); alert('Ocurrió un error de red.'); });
     });
 
-    // --- POBLACIÓN Y GESTIÓN DE CAMPOS DINÁMICOS ---
-    let includeIndex = 0;
-    $('#add-include').on('click', function() { $('#include-container').append(`<div class="input-group mb-2"><input type="text" name="include[${includeIndex++}][item]" class="form-control" placeholder="Ej: Transporte incluido"><button class="btn btn-danger btn-sm remove-item" type="button">X</button></div>`); });
-    if (tourData.include && Array.isArray(tourData.include)) {
-        tourData.include.forEach(item => { $('#add-include').click(); $('#include-container .input-group:last input').val(item.item); });
-    }
-
-    let excludeIndex = 0;
-    $('#add-exclude').on('click', function() { $('#exclude-container').append(`<div class="input-group mb-2"><input type="text" name="exclude[${excludeIndex++}][item]" class="form-control" placeholder="Ej: Propinas"><button class="btn btn-danger btn-sm remove-item" type="button">X</button></div>`); });
-    if (tourData.exclude && Array.isArray(tourData.exclude)) {
-        tourData.exclude.forEach(item => { $('#add-exclude').click(); $('#exclude-container .input-group:last input').val(item.item); });
-    }
-
-    let itineraryIndex = 0;
-    $('#add-itinerary').on('click', function() { $('#itinerary-container').append(`<div class="row align-items-center itinerary-item mb-3"><div class="col-md-5"><input type="text" name="itinerary[${itineraryIndex}][title]" class="form-control" placeholder="Título"></div><div class="col-md-6"><input type="text" name="itinerary[${itineraryIndex}][comment]" class="form-control" placeholder="Comentario"></div><div class="col-md-1"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div></div>`); itineraryIndex++; });
-    if (tourData.itinerary && Array.isArray(tourData.itinerary)) {
-        tourData.itinerary.forEach(item => {
-            $('#add-itinerary').click();
-            const lastItem = $('#itinerary-container .itinerary-item:last');
-            lastItem.find('input[name*="[title]"]').val(item.title);
-            lastItem.find('input[name*="[comment]"]').val(item.comment);
-        });
-    }
-
-    let faqIndex = 0;
-    $('#add-faq').on('click', function() { $('#faq-container').append(`<div class="faq-item mb-3"><div class="row"><div class="col-11 mb-2"><input type="text" name="faqs[${faqIndex}][question]" class="form-control" placeholder="Pregunta"></div><div class="col-1"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div></div><div class="row"><div class="col-12"><textarea name="faqs[${faqIndex}][answer]" class="form-control" rows="2" placeholder="Respuesta"></textarea></div></div></div>`); faqIndex++; });
-    if (tourData.faqs && Array.isArray(tourData.faqs)) {
-        tourData.faqs.forEach(item => {
-            $('#add-faq').click();
-            const lastItem = $('#faq-container .faq-item:last');
-            lastItem.find('input[name*="[question]"]').val(item.question);
-            lastItem.find('textarea[name*="[answer]"]').val(item.answer);
-        });
-    }
-
+    // ====================================================================
+    // 3. GESTIÓN DE CAMPOS DINÁMICOS (UI y Carga de Datos)
+    // ====================================================================
+        
     $(document).on('click', '.remove-item', function() {
-        $(this).closest('.input-group, .itinerary-item, .faq-item, .person-type-item').remove();
-    });
-    // --- GESTIÓN DE TIPOS DE PERSONA ---
-
-    // Lógica para mostrar/ocultar la sección
-    $('#enable_person_types').change(function() {
-        $('#person-types-section').toggle(this.checked);
-    }).change(); // Ejecutar al cargar para establecer el estado inicial
-
-    let personTypeCounter = 0;
-
-    // Lógica para AÑADIR un nuevo campo de tipo de persona
-    $('#add-person-type').on('click', function() {
-        const index = personTypeCounter++;
-        const html = `
-        <div class="row align-items-center person-type-item mb-2">
-            <div class="col-md-3"><input type="text" name="person_types[${index}][type]" class="form-control" placeholder="Ej: Adulto"></div>
-            <div class="col-md-2"><input type="number" name="person_types[${index}][min]" class="form-control" placeholder="Mín."></div>
-            <div class="col-md-2"><input type="number" name="person_types[${index}][max]" class="form-control" placeholder="Máx."></div>
-            <div class="col-md-3"><input type="number" name="person_types[${index}][price]" class="form-control" placeholder="Precio" step="0.01"></div>
-            <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div>
-        </div>`;
-        $('#person-types-list').append(html);
+        // Esta lista NO incluye .person-type-item para evitar el conflicto.
+        $(this).closest('.input-group, .itinerary-item, .faq-item, .extra-price-item, .service-fee-item, .discount-item').remove();
     });
 
-    // Lógica para CARGAR los datos existentes al abrir la página
-    const personTypesData = <?= !empty($tourMeta['person_types']) ? $tourMeta['person_types'] : '[]' ?>;
-    if (Array.isArray(personTypesData)) {
-        personTypesData.forEach(item => {
-            $('#add-person-type').click(); // Simula un clic para crear la fila
-            const lastItem = $('#person-types-list .person-type-item:last');
-            lastItem.find('input[name*="[type]"]').val(item.type);
-            lastItem.find('input[name*="[min]"]').val(item.min);
-            lastItem.find('input[name*="[max]"]').val(item.max);
-            lastItem.find('input[name*="[price]"]').val(item.price);
-        });
-    }
-
-    // Lógica para ELIMINAR (asegúrate de que el manejador .remove-item esté genérico)
-    $(document).on('click', '.remove-item', function() {
+    // 2. Manejador ESPECÍFICO para eliminar la fila completa de un Tipo de Persona.
+    $(document).on('click', '.remove-person-type', function() {
         $(this).closest('.person-type-item').remove();
     });
 
+    // 3. Manejador ESPECÍFICO para eliminar SOLO la sub-fila de un descuento anidado.
+    $(document).on('click', '.remove-nested-discount', function() {
+        $(this).closest('.discount-item-nested').remove();
+    });
+    
+    let includeIndex = 0;
+    $('#add-include').on('click', function() { $('#include-container').append(`<div class="input-group mb-2"><input type="text" name="include[${includeIndex++}][item]" class="form-control" placeholder="Ej: Transporte incluido"><button class="btn btn-danger btn-sm remove-item" type="button">X</button></div>`); });
+    if (tourData.include && Array.isArray(tourData.include)) { tourData.include.forEach(item => { $('#add-include').click(); $('#include-container .input-group:last input').val(item.item); }); }
 
+    let excludeIndex = 0;
+    $('#add-exclude').on('click', function() { $('#exclude-container').append(`<div class="input-group mb-2"><input type="text" name="exclude[${excludeIndex++}][item]" class="form-control" placeholder="Ej: Propinas"><button class="btn btn-danger btn-sm remove-item" type="button">X</button></div>`); });
+    if (tourData.exclude && Array.isArray(tourData.exclude)) { tourData.exclude.forEach(item => { $('#add-exclude').click(); $('#exclude-container .input-group:last input').val(item.item); }); }
 
+    let itineraryIndex = 0;
+    $('#add-itinerary').on('click', function() { $('#itinerary-container').append(`<div class="row align-items-center itinerary-item mb-3"><div class="col-md-5"><input type="text" name="itinerary[${itineraryIndex}][title]" class="form-control" placeholder="Título"></div><div class="col-md-6"><input type="text" name="itinerary[${itineraryIndex}][comment]" class="form-control" placeholder="Comentario"></div><div class="col-md-1"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div></div>`); itineraryIndex++; });
+    if (tourData.itinerary && Array.isArray(tourData.itinerary)) { tourData.itinerary.forEach(item => { $('#add-itinerary').click(); const l = $('#itinerary-container .itinerary-item:last'); l.find('input[name*="[title]"]').val(item.title); l.find('input[name*="[comment]"]').val(item.comment); }); }
 
-});
-
-
-    // 1. Lógica para mostrar/ocultar la sección de tipos de persona
-    $('#enable_person_types').change(function() {
-        $('#person-types-section').toggle(this.checked);
-    }).change(); // Ejecutar al cargar para establecer el estado inicial
-
-    // 2. Lógica para añadir un nuevo campo de tipo de persona
+    let faqIndex = 0;
+    $('#add-faq').on('click', function() { $('#faq-container').append(`<div class="faq-item mb-3"><div class="row"><div class="col-11 mb-2"><input type="text" name="faqs[${faqIndex}][question]" class="form-control" placeholder="Pregunta"></div><div class="col-1"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div></div><div class="row"><div class="col-12"><textarea name="faqs[${faqIndex}][answer]" class="form-control" rows="2" placeholder="Respuesta"></textarea></div></div></div>`); faqIndex++; });
+    if (tourData.faqs && Array.isArray(tourData.faqs)) { tourData.faqs.forEach(item => { $('#add-faq').click(); const l = $('#faq-container .faq-item:last'); l.find('input[name*="[question]"]').val(item.question); l.find('textarea[name*="[answer]"]').val(item.answer); }); }
+    
+    $('#enable_person_types').change(function() { $('#person-types-section').toggle(this.checked); }).change();
     let personTypeCounter = 0;
-    $('#add-person-type').click(function() {
+    $('#add-person-type').on('click', function() {
         const index = personTypeCounter++;
         const html = `
-            <div class="row mb-2 person-type-item">
-                <div class="col-md-3"><input type="text" name="person_types[${index}][type]" class="form-control" placeholder="Ej: Adulto"></div>
-                <div class="col-md-2"><input type="number" name="person_types[${index}][min]" class="form-control" placeholder="Mín."></div>
-                <div class="col-md-2"><input type="number" name="person_types[${index}][max]" class="form-control" placeholder="Máx."></div>
-                <div class="col-md-3"><input type="number" name="person_types[${index}][price]" class="form-control" placeholder="Precio" step="0.01"></div>
-                <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-item">X</button></div>
-            </div>`;
+        <div class="person-type-item border p-3 mb-3 rounded bg-light">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Tipo de Persona</label>
+                    <input type="text" name="person_types[${index}][type]" class="form-control" placeholder="Ej: Adulto">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Mín.</label>
+                    <input type="number" name="person_types[${index}][min]" class="form-control" placeholder="1">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Máx.</label>
+                    <input type="number" name="person_types[${index}][max]" class="form-control" placeholder="10">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Precio</label>
+                    <input type="number" name="person_types[${index}][price]" class="form-control" placeholder="100.00" step="0.01">
+                </div>
+                <div class="col-md-2 text-end">
+                    <button type="button" class="btn btn-danger btn-sm remove-person-type mt-3">Eliminar Tipo</button>
+                </div>
+            </div>
+            <div class="mt-3">
+                <small class="fw-bold">Descuentos por cantidad (solo para este tipo):</small>
+                <div class="nested-discounts-list mt-2"></div>
+                <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-nested-discount-btn" data-index="${index}">+ Añadir Descuento Específico</button>
+            </div>
+        </div>`;
         $('#person-types-list').append(html);
     });
+  
+    // REEMPLAZA ESTE BLOQUE COMPLETO
+    if (tourData.person_types && Array.isArray(tourData.person_types)) {
+        tourData.person_types.forEach(item => {
+            $('#add-person-type').click(); // Crea la fila principal
+            const lastPersonRow = $('#person-types-list .person-type-item:last');
+            
+            // Rellena los datos del tipo de persona
+            lastPersonRow.find('input[name*="[type]"]').val(item.type);
+            lastPersonRow.find('input[name*="[min]"]').val(item.min);
+            lastPersonRow.find('input[name*="[max]"]').val(item.max);
+            lastPersonRow.find('input[name*="[price]"]').val(item.price);
 
-    // 3. Lógica para cargar los datos existentes al abrir la página
-    const personTypesData = <?= !empty($tourMeta['person_types']) ? $tourMeta['person_types'] : '[]' ?>;
-    if (Array.isArray(personTypesData)) {
-        personTypesData.forEach(item => {
-            $('#add-person-type').click();
-            const lastItem = $('#person-types-list .person-type-item:last');
-            lastItem.find('input[name*="[type]"]').val(item.type);
-            lastItem.find('input[name*="[min]"]').val(item.min);
-            lastItem.find('input[name*="[max]"]').val(item.max);
-            lastItem.find('input[name*="[price]"]').val(item.price);
+            // Si existen descuentos, los recorre y los añade
+            if (item.discounts && Array.isArray(item.discounts)) {
+                item.discounts.forEach(discount => {
+                    lastPersonRow.find('.add-nested-discount-btn').click(); // Crea la fila de descuento anidada
+                    const lastDiscountRow = lastPersonRow.find('.discount-item-nested:last');
+
+                    // Rellena los datos del descuento
+                    lastDiscountRow.find('input[name*="[from]"]').val(discount.from);
+                    lastDiscountRow.find('input[name*="[amount]"]').val(discount.amount);
+                    lastDiscountRow.find('select[name*="[type]"]').val(discount.type);
+                });
+            }
         });
     }
 
+    // ====================================================================
+    // 4. MANEJADOR DE ENVÍO (VERSIÓN SIMPLIFICADA Y CORRECTA)
+    // ====================================================================
+    $('#main-tour-form').on('submit', function(event) {
+        event.preventDefault();
+        $("#quill-content-input").val(quill.root.innerHTML);
+        
+        var form = this;
+        var formData = new FormData(form);
+        var submitButton = $(this).find('button[type="submit"]');
+
+        submitButton.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+        $('.invalid-feedback').remove();
+        $('.is-invalid').removeClass('is-invalid');
+
+        $.ajax({
+            url: $(form).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert(response.message || '¡Tour actualizado exitosamente!');
+                    //location.reload();
+                } else {
+                    alert('Por favor, corrige los errores del formulario.');
+                    $.each(response.errors, function(field, message) {
+                        var input = $('[name="' + field + '"]');
+                        input.addClass('is-invalid');
+                        input.after('<div class="invalid-feedback d-block">' + message + '</div>');
+                    });
+                }
+            },
+            error: function() { alert('Ocurrió un error inesperado al actualizar.'); },
+            complete: function() { submitButton.prop('disabled', false).text('Actualizar Tour'); }
+        });
+    });
+});
 </script>
+
 <?= $this->endSection() ?>

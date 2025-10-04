@@ -82,7 +82,7 @@ class AuthController extends \CodeIgniter\Controller
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
-            return redirect()->to('/admin')->with('success', 'Bienvenido, ' . $user['name']);
+            return redirect()->to('/admin/dashboard')->with('success', 'Bienvenido, ' . $user['name']);
         } else {
             log_message('error', 'Fallo en la autenticación para el email: ' . $email);
             return redirect()->to('/auth/login')->with('error', 'Credenciales inválidas. Por favor, verifica tu correo electrónico y contraseña.');
